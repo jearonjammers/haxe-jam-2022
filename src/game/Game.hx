@@ -1,5 +1,8 @@
 package game;
 
+import flambe.input.PointerEvent;
+import flambe.System;
+import flambe.Disposer;
 import game.cafe.ThirstyArms;
 import game.cafe.Meter;
 import game.cafe.BarTable;
@@ -19,27 +22,48 @@ class Game extends Component {
 
 	override public function onRemoved() {
 		this.owner.removeChild(this._root);
+		this._disposer.dispose();
 	}
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
+		this._disposer = new Disposer();
 		this._root = new Entity();
-		this._thirstyPerson = new Entity().add(new ThirstyPerson(width, height));
-		this._barTable = new Entity().add(new BarTable(width, height));
-		this._thirstyArms = new Entity().add(new ThirstyArms(width, height));
 		this._meterTime = new Entity().add(new Meter(20, 40));
 		this._meterDrink = new Entity().add(new Meter(width - 120, 40).setFill(.25));
 		this._root //
-			.addChild(this._thirstyPerson) //
-			.addChild(this._barTable) //
-			.addChild(this._thirstyArms) //
+			.add(this._thirstyPerson = new ThirstyPerson(width, height)) //
+			.add(this._barTable = new BarTable(width, height)) //
+			.add(this._thirstyArms = new ThirstyArms(width, height)) //
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
+
+		var isDown = false;
+		function onPointer(e:PointerEvent) {
+			_thirstyArms.setTarget(e.viewX, e.viewY);
+		}
+
+		this._disposer.add(System.pointer.down.connect(e -> {
+			isDown = true;
+			onPointer(e);
+		}));
+		this._disposer.add(System.pointer.up.connect(e -> {
+			if (isDown) {
+				onPointer(e);
+				isDown = false;
+			}
+		}));
+		this._disposer.add(System.pointer.move.connect(e -> {
+			if (isDown) {
+				onPointer(e);
+			}
+		}));
 	}
 
 	private var _root:Entity;
 	private var _meterTime:Entity;
 	private var _meterDrink:Entity;
-	private var _barTable:Entity;
-	private var _thirstyPerson:Entity;
-	private var _thirstyArms:Entity;
+	private var _barTable:BarTable;
+	private var _thirstyPerson:ThirstyPerson;
+	private var _thirstyArms:ThirstyArms;
+	private var _disposer:Disposer;
 }

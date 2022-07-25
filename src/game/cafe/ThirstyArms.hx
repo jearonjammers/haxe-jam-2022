@@ -18,6 +18,12 @@ class ThirstyArms extends Component {
 		owner.removeChild(this._root);
 	}
 
+	public function setTarget(viewX:Float, viewY:Float):ThirstyArms {
+		this._left.get(ThirstyArm).setTarget(viewX, viewY);
+		this._right.get(ThirstyArm).setTarget(viewX, viewY);
+		return this;
+	}
+
 	public function init(width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
