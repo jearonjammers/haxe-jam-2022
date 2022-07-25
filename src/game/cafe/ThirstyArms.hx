@@ -74,6 +74,7 @@ class ThirstyArm extends Component {
 		var angleDeg = this._isFlipped ? rotFlip(local.x, local.y) : rotNorm(local.x, local.y);
 		var distance = local.distanceTo(0, 0);
 		upperSpite.setRotation(angleDeg - 90);
+		// trace(REACH - distance);
 	}
 
 	private inline function rotFlip(x:Float, y:Float):Float {
@@ -88,14 +89,14 @@ class ThirstyArm extends Component {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //
 			.add(new FillSprite(0xff0000, UPPERARM_WIDTH, UPPERARM_LENGTH) //
-				.setAnchor(UPPERARM_WIDTH / 2, ARM_OVERLAP));
+				.setAnchor(UPPERARM_WIDTH / 2, 0));
 		this._lower = new Entity() //
 			.add(new FillSprite(0xffaaaa, LOWERARM_WIDTH, LOWERARM_LENGTH) //
-				.setXY(UPPERARM_WIDTH / 2, UPPERARM_LENGTH - ARM_OVERLAP) //
+				.setXY(UPPERARM_WIDTH / 2, UPPERARM_LENGTH) //
 				.setAnchor(LOWERARM_WIDTH / 2, ARM_OVERLAP));
 		this._hand = new Entity() //
 			.add(new FillSprite(0xffdddd, HAND_DIM, HAND_DIM) //
-				.setXY(LOWERARM_WIDTH / 2, LOWERARM_LENGTH - ARM_OVERLAP) //
+				.setXY(LOWERARM_WIDTH / 2, LOWERARM_LENGTH) //
 				.centerAnchor());
 
 		this._root.addChild(this._upper);
@@ -117,4 +118,5 @@ class ThirstyArm extends Component {
 	private static var LOWERARM_WIDTH = 80;
 	private static var ARM_OVERLAP = 5;
 	private static var HAND_DIM = 90;
+	private static var REACH = UPPERARM_LENGTH + LOWERARM_LENGTH - ARM_OVERLAP + HAND_DIM / 2;
 }
