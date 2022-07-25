@@ -3,9 +3,9 @@ package game;
 import flambe.Entity;
 import flambe.Component;
 
-class Meter extends Component {
+class Template extends Component {
 	public function new() {
-		this.init()
+		this.init();
 	}
 
 	override function onAdded() {
