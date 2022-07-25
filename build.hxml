@@ -1,0 +1,9 @@
+-cp src
+-D analyzer-optimize
+-D html
+-D flambe_transparent
+--macro "flambe.platform.ManifestBuilder.use('./public/assets')"
+--dce full
+-main game.Main
+-lib haxe-loader
+-js out.js
