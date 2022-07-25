@@ -1,4 +1,4 @@
-package game;
+package game.cafe;
 
 import flambe.math.FMath;
 import flambe.display.FillSprite;
