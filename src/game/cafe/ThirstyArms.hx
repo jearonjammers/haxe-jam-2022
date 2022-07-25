@@ -69,12 +69,20 @@ class ThirstyArm extends Component {
 	private function updateReach() {
 		var rootSpr = this._root.get(Sprite);
 		var upperSpite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
 
 		var local = rootSpr.localXY(this._viewX, this._viewY);
 		var angleDeg = this._isFlipped ? rotFlip(local.x, local.y) : rotNorm(local.x, local.y);
 		var distance = local.distanceTo(0, 0);
-		upperSpite.setRotation(angleDeg - 90);
-		// trace(REACH - distance);
+		var distRemain = REACH - distance;
+		if(distRemain > 0) {
+			upperSpite.setRotation(angleDeg - 90);
+			lowerSprite.setRotation(50);
+		}
+		else {
+			upperSpite.setRotation(angleDeg - 90);
+			lowerSprite.setRotation(0);
+		}
 	}
 
 	private inline function rotFlip(x:Float, y:Float):Float {
@@ -88,15 +96,15 @@ class ThirstyArm extends Component {
 	public function init(x:Float, y:Float) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //
-			.add(new FillSprite(0xff0000, UPPERARM_WIDTH, UPPERARM_LENGTH) //
+			.add(new FillSprite(0xff0000, UPPERARM_WIDTH, SEGMENT_LENGTH) //
 				.setAnchor(UPPERARM_WIDTH / 2, 0));
 		this._lower = new Entity() //
-			.add(new FillSprite(0xffaaaa, LOWERARM_WIDTH, LOWERARM_LENGTH) //
-				.setXY(UPPERARM_WIDTH / 2, UPPERARM_LENGTH) //
+			.add(new FillSprite(0xffaaaa, LOWERARM_WIDTH, SEGMENT_LENGTH) //
+				.setXY(UPPERARM_WIDTH / 2, SEGMENT_LENGTH) //
 				.setAnchor(LOWERARM_WIDTH / 2, ARM_OVERLAP));
 		this._hand = new Entity() //
 			.add(new FillSprite(0xffdddd, HAND_DIM, HAND_DIM) //
-				.setXY(LOWERARM_WIDTH / 2, LOWERARM_LENGTH) //
+				.setXY(LOWERARM_WIDTH / 2, SEGMENT_LENGTH) //
 				.centerAnchor());
 
 		this._root.addChild(this._upper);
@@ -112,11 +120,10 @@ class ThirstyArm extends Component {
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
 
-	private static var UPPERARM_LENGTH = 240;
+	private static var SEGMENT_LENGTH = 230;
 	private static var UPPERARM_WIDTH = 85;
-	private static var LOWERARM_LENGTH = 200;
 	private static var LOWERARM_WIDTH = 80;
 	private static var ARM_OVERLAP = 5;
 	private static var HAND_DIM = 90;
-	private static var REACH = UPPERARM_LENGTH + LOWERARM_LENGTH - ARM_OVERLAP + HAND_DIM / 2;
+	private static var REACH = SEGMENT_LENGTH * 2 - ARM_OVERLAP;
 }
