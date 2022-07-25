@@ -27,31 +27,6 @@ class Main {
 	}
 
 	static function onLoaded(width:Int, height:Int, pack:AssetPack):Void {
-		System.root.add(new Spinner(pack.getTexture("logo")));
-
-		// var inc = 0;
-		// var props = {name: '${inc}'};
-
-		// var splash:WebView = null;
-		// splash = System.web.addView(vueSplash, {
-		// 	onClick: () -> {
-		// 		// initialize audio
-		// 		pack.getSound("silence").play();
-		// 		// remove splash screen
-		// 		splash.dispose();
-		// 		// add game ui
-		// 		System.web.addView(vueHelloWorld, {
-		// 			onClick: () -> {
-		// 				trace("hello from haxe!");
-		// 			}
-		// 		}, props);
-		// 		// show game container
-		// 		System.root.get(Container).visible = true;
-		// 	}
-		// }, {width: width, height: height});
-
-		// System.root.get(Sprite).pointerDown.connect((_) -> {
-		// 	props.name = '${++inc}';
-		// });
+		System.root.add(new Game(pack, width, height));
 	}
 }
