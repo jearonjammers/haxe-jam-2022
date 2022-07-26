@@ -1,6 +1,6 @@
 <template>
   <div class="splash" :style="{ width: width + 'px', height: height + 'px' }">
-    <img @click="onClick" src="/assets/bootstrap/play.png" alt="Start Game" />
+    <img @click="onClick" src="assets/bootstrap/play.png" alt="Start Game" />
   </div>
 </template>
 
