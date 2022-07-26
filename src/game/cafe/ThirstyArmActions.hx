@@ -22,9 +22,9 @@ class ThirstyArmActions extends Component {
 	public static var upperAngle:Float = 0;
 	public static var lowerAngle:Float = 0;
 	public static inline var SEGMENT_LENGTH_TOP = 345;
-	public static inline var SEGMENT_LENGTH_BOTTOM = 310;
+	public static inline var SEGMENT_LENGTH_BOTTOM = 333;
 	public static inline var UPPERARM_WIDTH = 93;
-	public static inline var LOWERARM_WIDTH = 80;
+	public static inline var LOWERARM_WIDTH = 91;
 	public static inline var ARM_OVERLAP = 5;
 	public static inline var HAND_DIM = 90;
 	public static inline var REACH = SEGMENT_LENGTH_TOP + SEGMENT_LENGTH_BOTTOM - ARM_OVERLAP;
