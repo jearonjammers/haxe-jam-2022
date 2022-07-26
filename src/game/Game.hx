@@ -1,5 +1,6 @@
 package game;
 
+import flambe.SpeedAdjuster;
 import flambe.animation.Sine;
 import flambe.animation.AnimatedFloat;
 import flambe.input.PointerEvent;
