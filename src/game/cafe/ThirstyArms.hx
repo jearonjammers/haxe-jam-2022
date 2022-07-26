@@ -337,7 +337,7 @@ class ThirstyArm extends Component {
 	private var _lowerAngle:Float = 0;
 	private var _scratchLocal:Point = new Point();
 
-	private static var SEGMENT_LENGTH = 290;
+	private static var SEGMENT_LENGTH = 310;
 	private static var UPPERARM_WIDTH = 85;
 	private static var LOWERARM_WIDTH = 80;
 	private static var ARM_OVERLAP = 5;
