@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.System;
 import flambe.animation.AnimatedFloat;
 import flambe.script.Repeat;
 import flambe.math.Point;
@@ -51,6 +52,12 @@ class ThirstyArms extends Component {
 
 	public function slam():ThirstyArms {
 		this._right.get(ThirstyArm).slam();
+		return this;
+	}
+
+	public function success():ThirstyArms {
+		this._left.get(ThirstyArm).success();
+		this._right.get(ThirstyArm).success();
 		return this;
 	}
 
@@ -137,6 +144,63 @@ class ThirstyArm extends Component {
 					new AnimateTo(lowerSprite.rotation, angleBottom1, 0.3, Ease.cubeIn),
 				])
 			]), 3),
+			new Delay(0.5),
+			new CallFunction(() -> {
+				this.isStale = false;
+			})
+		]));
+
+		return this;
+	}
+
+	public function success():ThirstyArm {
+		this.isStale = true;
+
+		var rootSpr = this._root.get(Sprite);
+
+		var local1 = rootSpr.localXY(System.stage.width / 2 + 70, System.stage.height / 2 - 150);
+		calcAngles(local1.x, local1.y);
+		var angleTop1 = MathUtil.normDegrees(_upperAngle);
+		var angleBottom1 = MathUtil.normDegrees(_lowerAngle);
+		var local2 = rootSpr.localXY(System.stage.width / 2 + 70, System.stage.height / 2 - 75);
+		calcAngles(local2.x, local2.y);
+		var angleTop2 = MathUtil.normDegrees(_upperAngle);
+		var angleBottom2 = MathUtil.normDegrees(_lowerAngle);
+
+		var local3 = rootSpr.localXY(System.stage.width / 2 - 70, System.stage.height / 2 - 150);
+		calcAngles(local3.x, local3.y);
+		var angleTop3 = MathUtil.normDegrees(_upperAngle);
+		var angleBottom3 = MathUtil.normDegrees(_lowerAngle);
+		var local4 = rootSpr.localXY(System.stage.width / 2 - 70, System.stage.height / 2 - 75);
+		calcAngles(local4.x, local4.y);
+		var angleTop4 = MathUtil.normDegrees(_upperAngle);
+		var angleBottom4 = MathUtil.normDegrees(_lowerAngle);
+
+		var upperSpite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
+		upperSpite.rotation._ = angleTop1;
+		lowerSprite.rotation._ = angleBottom1;
+		this._root.add(new Script()).get(Script).run(new Sequence([
+			new Repeat(new Sequence([
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop2, 0.24, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom2, 0.24, Ease.cubeIn),
+				]),
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop1, 0.3, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom1, 0.3, Ease.cubeIn),
+				])
+			]), 2),
+			new Repeat(new Sequence([
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop3, 0.24, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom3, 0.24, Ease.cubeIn),
+				]),
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop4, 0.3, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom4, 0.3, Ease.cubeIn),
+				])
+			]), 2),
 			new Delay(0.5),
 			new CallFunction(() -> {
 				this.isStale = false;
