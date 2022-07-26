@@ -45,8 +45,8 @@ class ThirstyArms extends Component {
 	}
 
 	public function success():ThirstyArms {
-		// this._left.get(ThirstyArm).success();
-		// this._right.get(ThirstyArm).success();
+		this._left.get(ThirstyArm).success();
+		this._right.get(ThirstyArm).success();
 		return this;
 	}
 
@@ -125,6 +125,16 @@ class ThirstyArm extends Component {
 		var upperSprite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
 		ThirstyArmActions.slam(() -> {
+			this.isStale = false;
+		}, this._root, upperSprite, lowerSprite, this._isFlipped);
+		return this;
+	}
+
+	public function success():ThirstyArm {
+		this.isStale = true;
+		var upperSprite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
+		ThirstyArmActions.success(() -> {
 			this.isStale = false;
 		}, this._root, upperSprite, lowerSprite, this._isFlipped);
 		return this;

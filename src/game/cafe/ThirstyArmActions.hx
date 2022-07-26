@@ -54,7 +54,7 @@ class ThirstyArmActions extends Component {
 		]));
 	}
 
-	public function success(onComplete:Void->Void, root :Entity, upperSprite:Sprite, lowerSprite:Sprite, isFlipped:Bool):Void {
+	public static function success(onComplete:Void->Void, root :Entity, upperSprite:Sprite, lowerSprite:Sprite, isFlipped:Bool):Void {
 		var rootSpr = root.get(Sprite);
 
 		var local1 = rootSpr.localXY(System.stage.width / 2 + 70, System.stage.height / 2 - 150);

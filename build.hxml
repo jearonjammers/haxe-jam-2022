@@ -2,6 +2,7 @@
 -D analyzer-optimize
 -D html
 -D flambe_transparent
+-D flambe_webgl_enable_linear
 --macro "flambe.platform.ManifestBuilder.use('./public/assets')"
 --dce full
 -main game.Main

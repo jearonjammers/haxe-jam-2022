@@ -1,6 +1,6 @@
 <template>
   <div class="splash" :style="{ width: width + 'px', height: height + 'px' }">
-    <button @click="onClick">Start Game</button>
+    <img @click="onClick" src="/assets/bootstrap/play.png" alt="Start Game" />
   </div>
 </template>
 
@@ -25,12 +25,19 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  button {
-    cursor: pointer;
-    user-select: none;
-    font-size: 60px;
-  }
   background-size: 100px 100px;
-  background-color: #00d4f0;
+  background-color: #acdde5;
+  img {
+    transform: scale(1);
+    transition: transform 0.125s ease-in-out;
+  }
+  img:hover {
+    transform: scale(1.05);
+    transition: none;
+  }
+  img:active {
+    transform: scale(0.98);
+    transition: none;
+  }
 }
 </style>
