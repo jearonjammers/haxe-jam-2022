@@ -1,5 +1,7 @@
 package game;
 
+import flambe.animation.Sine;
+import flambe.animation.AnimatedFloat;
 import flambe.input.PointerEvent;
 import flambe.System;
 import flambe.Disposer;
@@ -26,6 +28,9 @@ class Game extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
+		_anchorX.update(dt);
+		_anchorY.update(dt);
+		_rotation.update(dt);
 		_elapsed += dt;
 		if(_elapsed > 5) {
 			_elapsed = 0;
@@ -38,6 +43,10 @@ class Game extends Component {
 	}
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
+		_anchorX.behavior = new Sine(-40, 40, 2);
+		_anchorY.behavior = new Sine(-10, 20, 3);
+		_rotation.behavior = new Sine(-5, 5, 4);
+
 		this._disposer = new Disposer();
 		this._root = new Entity();
 		this._meterTime = new Entity().add(new Meter(20, 40));
@@ -48,6 +57,9 @@ class Game extends Component {
 			.add(this._thirstyArms = new ThirstyArms(width, height)) //
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
+
+		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
+		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
 
 		var isDown = false;
 		function onPointer(e:PointerEvent) {
@@ -61,6 +73,7 @@ class Game extends Component {
 		this._disposer.add(System.pointer.up.connect(e -> {
 			if (isDown) {
 				onPointer(e);
+				this._thirstyArms.reset();
 				isDown = false;
 			}
 		}));
@@ -79,4 +92,7 @@ class Game extends Component {
 	private var _thirstyArms:ThirstyArms;
 	private var _disposer:Disposer;
 	private var _elapsed = 0.0;
+	private var _anchorX = new AnimatedFloat(0);
+	private var _anchorY = new AnimatedFloat(0);
+	private var _rotation = new AnimatedFloat(0);
 }

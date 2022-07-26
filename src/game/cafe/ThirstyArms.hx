@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.animation.AnimatedFloat;
 import flambe.script.Repeat;
 import flambe.math.Point;
 import flambe.script.Delay;
@@ -37,6 +38,12 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
+	public function bindTo(anchorX:AnimatedFloat, anchorY:AnimatedFloat, rotation:AnimatedFloat) {
+		this._root.get(Sprite).anchorX.bindTo(anchorX);
+		this._root.get(Sprite).anchorY.bindTo(anchorY);
+		this._root.get(Sprite).rotation.bindTo(rotation);
+	}
+
 	public function wave():ThirstyArms {
 		this._right.get(ThirstyArm).wave();
 		return this;
@@ -47,15 +54,20 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
+	public function reset():ThirstyArms {
+		this._left.get(ThirstyArm).reset();
+		this._right.get(ThirstyArm).reset();
+		return this;
+	}
+
 	public function init(width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
-		this._left = new Entity().add(new ThirstyArm(-150, 0, false).setTarget(width - 200, 400));
-		this._right = new Entity().add(new ThirstyArm(150, 0, true).setTarget(width + 200, 700));
+		this._left = new Entity().add(new ThirstyArm(-150, 0, false));
+		this._right = new Entity().add(new ThirstyArm(150, 0, true));
 
 		this._root //
-			.addChild(this._right)
-			.addChild(this._left); //
+			.addChild(this._right).addChild(this._left); //
 	}
 
 	private var _root:Entity;
@@ -73,6 +85,17 @@ class ThirstyArm extends Component {
 
 	override function onAdded() {
 		owner.addChild(this._root);
+	}
+
+	override function onStart() {
+		var vm = this._root.get(Sprite).getViewMatrix();
+		this._startX = this._viewX = vm.m02;
+		this._startY = this._viewY = vm.m12;
+	}
+
+	public function reset() {
+		this._viewX = this._startX;
+		this._viewY = this._startY;
 	}
 
 	override function onRemoved() {
@@ -244,6 +267,8 @@ class ThirstyArm extends Component {
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
+	private var _startX:Float = 0;
+	private var _startY:Float = 0;
 	private var _upperAngle:Float = 0;
 	private var _lowerAngle:Float = 0;
 	private var _scratchLocal:Point = new Point();

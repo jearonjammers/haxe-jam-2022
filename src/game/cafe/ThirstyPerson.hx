@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.animation.Sine;
+import flambe.animation.AnimatedFloat;
 import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
@@ -16,6 +18,12 @@ class ThirstyPerson extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
+	}
+
+	public function bindTo(anchorX :AnimatedFloat, anchorY :AnimatedFloat, rotation:AnimatedFloat) {
+		this._root.get(Sprite).anchorX.bindTo(anchorX);
+		this._root.get(Sprite).anchorY.bindTo(anchorY);
+		this._root.get(Sprite).rotation.bindTo(rotation);
 	}
 
 	public function init(width:Int, height:Int) {
@@ -51,6 +59,9 @@ class ThirstyPersonHead extends Component {
 		this._root = new Entity().add(new Sprite());
 		this._head = new Entity().add(new FillSprite(0xfffff0, 210, 210).setXY(0, -190).centerAnchor());
 		this._root.addChild(this._head);
+		this._root.get(Sprite).anchorX.behavior = new Sine(-20, 20, 2);
+		this._root.get(Sprite).anchorY.behavior = new Sine(-5, 10, 3);
+		this._root.get(Sprite).rotation.behavior = new Sine(-5, 5, 5);
 	}
 
 	private var _root:Entity;
