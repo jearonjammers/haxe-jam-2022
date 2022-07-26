@@ -48,6 +48,7 @@ class Background extends Component {
 			.addChild(new Entity().add(cloud1))
 			.addChild(new Entity().add(cloud2))
 			.addChild(new Entity().add(cloud3))
+			.add(new BackgroundSun(pack))
 			.addChild(this._title) //
 			.addChild(new Entity().add(this._flamingo)); //
 	}
@@ -55,4 +56,34 @@ class Background extends Component {
 	private var _root:Entity;
 	private var _title:Entity;
 	private var _flamingo:Sprite;
+}
+
+class BackgroundSun extends Component {
+	public function new(pack:AssetPack) {
+		this.init(pack);
+	}
+
+	override function onAdded() {
+		owner.addChild(this._root);
+	}
+
+	override function onRemoved() {
+		owner.removeChild(this._root);
+	}
+
+	override function onUpdate(dt:Float) {
+		_stripes.rotation._ += dt * 20;
+	}
+
+	public function init(pack:AssetPack) {
+		this._root = new Entity();
+		this._root.add(new Sprite().setXY(250, 250));
+		this._root.addChild(new Entity().add(_stripes = new ImageSprite(pack.getTexture("sun/sunStripes")).centerAnchor()));
+		this._root.addChild(new Entity().add(_sun = new ImageSprite(pack.getTexture("sun/sun")).centerAnchor()));
+		this._root.addChild(new Entity().add(new ImageSprite(pack.getTexture("sun/ear")).setXY(-150, -50)));
+	}
+
+	private var _root:Entity;
+	private var _stripes:Sprite;
+	private var _sun:Sprite;
 }
