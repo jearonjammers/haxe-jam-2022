@@ -1,5 +1,12 @@
 package game.cafe;
 
+import flambe.script.Delay;
+import flambe.script.Parallel;
+import flambe.animation.Ease;
+import flambe.script.CallFunction;
+import flambe.script.AnimateTo;
+import flambe.script.Sequence;
+import flambe.script.Script;
 import flambe.math.FMath;
 import flambe.display.FillSprite;
 import flambe.display.Sprite;
@@ -32,7 +39,7 @@ class ThirstyArms extends Component {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
 		this._left = new Entity().add(new ThirstyArm(-150, 0, false).setTarget(width - 200, 400));
-		this._right = new Entity().add(new ThirstyArm(150, 0, true).setTarget(width + 200, 700));
+		this._right = new Entity().add(new ThirstyArm(150, 0, true).setTarget(width + 200, 700).wave());
 
 		this._root //
 			.addChild(this._left) //
@@ -45,6 +52,8 @@ class ThirstyArms extends Component {
 }
 
 class ThirstyArm extends Component {
+	public var isStale:Bool = false;
+
 	public function new(x:Float, y:Float, isFlipped:Bool) {
 		this.init(x, y);
 		this._isFlipped = isFlipped;
@@ -69,8 +78,54 @@ class ThirstyArm extends Component {
 		return this;
 	}
 
+	public function wave():ThirstyArm {
+		this.isStale = true;
+
+		var upperSpite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
+		upperSpite.rotation._ = 210;
+		this._root.add(new Script()).get(Script).run(new Sequence([
+			new Parallel([
+				new AnimateTo(upperSpite.rotation, 260, 0.6, Ease.cubeIn),
+				new AnimateTo(lowerSprite.rotation, -100, 0.6, Ease.cubeIn),
+			]),
+			new Parallel([
+				new AnimateTo(upperSpite.rotation, 210, 0.5, Ease.cubeIn),
+				new AnimateTo(lowerSprite.rotation, 0, 0.5, Ease.cubeIn),
+			]),
+			new Parallel([
+				new AnimateTo(upperSpite.rotation, 300, 0.6, Ease.cubeIn),
+				new AnimateTo(lowerSprite.rotation, -100, 0.6, Ease.cubeIn),
+			]),
+			new Parallel([
+				new AnimateTo(upperSpite.rotation, 210, 0.5, Ease.cubeIn),
+				new AnimateTo(lowerSprite.rotation, 0, 0.5, Ease.cubeIn),
+			]),
+			new Delay(0.4),
+			new CallFunction(() -> {
+				this.isStale = false;
+			})
+		]));
+
+		return this;
+	}
+
+	private inline function reflectAngle(q:Int):Bool {
+		var isReflected = false;
+		if (!this._isFlipped) {
+			if (q == 0 || q == 1) {
+				isReflected = true;
+			}
+		} else {
+			if (q == 3 || q == 2) {
+				isReflected = true;
+			}
+		}
+		return isReflected;
+	}
+
 	private function updateReach() {
-		if (!_hasUpdate) {
+		if (!_hasUpdate || isStale) {
 			return;
 		}
 		_hasUpdate = false;
@@ -78,11 +133,12 @@ class ThirstyArm extends Component {
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
 
-		var isReflected = !this._isFlipped;
-
 		var local = rootSpr.localXY(this._viewX, this._viewY);
+		var rawAngle = getAngle(local.x, local.y);
+		var isReflected = reflectAngle(MathUtil.quadrant(rawAngle));
+
 		var localY = isReflected ? -local.y : local.y;
-		var angleRads = this._isFlipped ? rotFlip(local.x, localY) : rotNorm(local.x, localY);
+		var angleRads = getAngle(local.x, localY);
 		var distance = local.distanceTo(0, 0);
 		var distRemain = REACH - distance;
 		if (distRemain > 0) {
@@ -101,16 +157,12 @@ class ThirstyArm extends Component {
 				}
 			}
 		} else {
-			// upperSpite.setRotation(angleDeg - 90);
-			// lowerSprite.setRotation(0);
+			upperSpite.setRotation(FMath.toDegrees(rawAngle) - 90);
+			lowerSprite.setRotation(0);
 		}
 	}
 
-	private inline function rotFlip(x:Float, y:Float):Float {
-		return Math.atan2(y, x);
-	}
-
-	private inline function rotNorm(x:Float, y:Float):Float {
+	private inline function getAngle(x:Float, y:Float):Float {
 		return Math.atan2(y, x);
 	}
 

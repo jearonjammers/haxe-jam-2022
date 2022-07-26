@@ -1,5 +1,7 @@
 package game;
 
+import flambe.math.FMath;
+
 class MathUtil {
 	public static function solveTriangle(a:Float, b:Float, c:Float):Null<{a:Float, b:Float, c:Float}> {
 		var angleA = solveAngle(b, c, a);
@@ -26,5 +28,21 @@ class MathUtil {
 		var c = Math.cos(rad);
 		var s = Math.sin(rad);
 		return isX ? Math.atan2(s, -c) : Math.atan2(-s, c);
+	}
+
+	public static function normDegrees(degrees:Float):Float {
+		return (degrees % 360 + 360) % 360;
+	}
+
+	public static function quadrant(rad:Float):Int {
+		var degrees = normDegrees(FMath.toDegrees(rad));
+		if (degrees > 270) {
+			return 3;
+		} else if (degrees > 180) {
+			return 2;
+		} else if (degrees > 90) {
+			return 1;
+		}
+		return 0;
 	}
 }
