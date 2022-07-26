@@ -144,7 +144,7 @@ class BackgroundSunEye extends Component {
 		this._root.addChild(new Entity().add(new FillSprite(0xF4DEC9, eyeTex.width - 4, eyeTex.height - 4).setXY(2, 2)));
 		this._root.addChild(new Entity().add(_pupil = new ImageSprite(pack.getTexture("sun/eyePupil")).setXY(38, 70).centerAnchor()));
 		this._root.addChild(new Entity().add(new ImageSprite(eyeTex)));
-		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("sun/eyebrow")).setXY(24, -12).centerAnchor()));
+		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("sun/eyebrow")).setXY(36, 10).centerAnchor()));
 	}
 
 	private var _root:Entity;

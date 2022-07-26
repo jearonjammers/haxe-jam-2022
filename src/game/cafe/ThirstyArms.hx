@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.asset.AssetPack;
+import flambe.display.ImageSprite;
 import flambe.System;
 import flambe.animation.AnimatedFloat;
 import flambe.display.FillSprite;
@@ -10,8 +12,8 @@ import flambe.Component;
 using game.SpriteUtil;
 
 class ThirstyArms extends Component {
-	public function new(width:Int, height:Int) {
-		this.init(width, height);
+	public function new(pack:AssetPack, width:Int, height:Int) {
+		this.init(pack, width, height);
 	}
 
 	override function onAdded() {
@@ -56,11 +58,12 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
-	public function init(width:Int, height:Int) {
+	public function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
-
-		this._left = new Entity().add(new ThirstyArm(-150, 0, false));
-		this._right = new Entity().add(new ThirstyArm(150, 0, true));
+		var x = 230;
+		var y = 180;
+		this._left = new Entity().add(new ThirstyArm(pack, -x + 10, y, false));
+		this._right = new Entity().add(new ThirstyArm(pack, x + 10, y, true));
 
 		this._root //
 			.addChild(this._right).addChild(this._left); //
@@ -74,8 +77,8 @@ class ThirstyArms extends Component {
 class ThirstyArm extends Component {
 	public var isStale:Bool = false;
 
-	public function new(x:Float, y:Float, isFlipped:Bool) {
-		this.init(x, y);
+	public function new(pack:AssetPack, x:Float, y:Float, isFlipped:Bool) {
+		this.init(pack, x, y);
 		this._isFlipped = isFlipped;
 	}
 
@@ -172,23 +175,30 @@ class ThirstyArm extends Component {
 		return Math.atan2(y, x);
 	}
 
-	public function init(x:Float, y:Float) {
+	public function init(pack:AssetPack, x:Float, y:Float) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
-		this._upper = new Entity() //
-			.add(new FillSprite(0xff0000, ThirstyArmActions.UPPERARM_WIDTH, ThirstyArmActions.SEGMENT_LENGTH) //
-				.setAnchor(ThirstyArmActions.UPPERARM_WIDTH / 2, 0));
+		this._upper = makeUpper(pack);
 		this._lower = new Entity() //
-			.add(new FillSprite(0xffaaaa, ThirstyArmActions.LOWERARM_WIDTH, ThirstyArmActions.SEGMENT_LENGTH) //
-				.setXY(ThirstyArmActions.UPPERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH) //
+			.add(new FillSprite(0xffaaaa, ThirstyArmActions.LOWERARM_WIDTH, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM) //
+				.setXY(ThirstyArmActions.UPPERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_TOP) //
 				.setAnchor(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.ARM_OVERLAP));
 		this._hand = new Entity() //
 			.add(new FillSprite(0xffdddd, ThirstyArmActions.HAND_DIM, ThirstyArmActions.HAND_DIM) //
-				.setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH) //
+				.setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM) //
 				.centerAnchor());
 
 		this._root.addChild(this._upper);
 		this._upper.addChild(this._lower);
 		this._lower.addChild(this._hand);
+	}
+
+	private function makeUpper(pack:AssetPack):Entity {
+		var upper = new Entity().add(new Sprite());
+		var spr = new ImageSprite(pack.getTexture("body/armTop")) //
+			.setRotation(90) //
+			.setAnchor(0, ThirstyArmActions.UPPERARM_WIDTH / 2);
+		upper.addChild(new Entity().add(spr));
+		return upper;
 	}
 
 	private var _root:Entity;

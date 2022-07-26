@@ -21,12 +21,13 @@ using game.SpriteUtil;
 class ThirstyArmActions extends Component {
 	public static var upperAngle:Float = 0;
 	public static var lowerAngle:Float = 0;
-	public static inline var SEGMENT_LENGTH = 310;
-	public static inline var UPPERARM_WIDTH = 85;
+	public static inline var SEGMENT_LENGTH_TOP = 345;
+	public static inline var SEGMENT_LENGTH_BOTTOM = 310;
+	public static inline var UPPERARM_WIDTH = 93;
 	public static inline var LOWERARM_WIDTH = 80;
 	public static inline var ARM_OVERLAP = 5;
 	public static inline var HAND_DIM = 90;
-	public static inline var REACH = SEGMENT_LENGTH * 2 - ARM_OVERLAP;
+	public static inline var REACH = SEGMENT_LENGTH_TOP + SEGMENT_LENGTH_BOTTOM - ARM_OVERLAP;
 
 	public static function wave(onComplete:Void->Void, root :Entity, upperSpite:Sprite, lowerSprite:Sprite, isFlipped:Bool):Void {
 		calcAngles(200, -430, isFlipped);
@@ -139,7 +140,7 @@ class ThirstyArmActions extends Component {
 		var distRemain = REACH - distance;
 		if (distRemain > 0) {
 			var overlap = ARM_OVERLAP / 2;
-			var solve = MathUtil.solveTriangle(SEGMENT_LENGTH - overlap, SEGMENT_LENGTH - overlap, distance);
+			var solve = MathUtil.solveTriangle(SEGMENT_LENGTH_BOTTOM - overlap, SEGMENT_LENGTH_TOP - overlap, distance);
 			if (solve != null) {
 				var angleA = angleRads - 1.5708 - solve.a;
 				var angleB = solve.a + solve.b;

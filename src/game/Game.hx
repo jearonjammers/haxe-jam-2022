@@ -30,7 +30,6 @@ class Game extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
-		return;
 		_anchorX.update(dt);
 		_anchorY.update(dt);
 		_rotation.update(dt);
@@ -47,8 +46,7 @@ class Game extends Component {
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		_anchorX.behavior = new Sine(-40, 40, 2);
-		_anchorY.behavior = new Sine(-10, 20, 3);
-		_rotation.behavior = new Sine(-5, 5, 4);
+		_anchorY.behavior = new Sine(5, 0, 3);
 
 		this._disposer = new Disposer();
 		this._root = new Entity();
@@ -57,36 +55,36 @@ class Game extends Component {
 		this._root //
 			.add(new Background(pack)) //
 			.add(new PlayButton(pack)) //
-				// .add(this._thirstyPerson = new ThirstyPerson(width, height)) //
-			.add(this._barTable = new BarTable(pack, height)); //
-		// .add(this._thirstyArms = new ThirstyArms(width, height)) //
+			.add(this._thirstyPerson = new ThirstyPerson(pack, width, height)) //
+			.add(this._barTable = new BarTable(pack, height)) //
+			.add(this._thirstyArms = new ThirstyArms(pack, width, height)); //
 		// .addChild(this._meterTime) //
 		// .addChild(this._meterDrink); //
 
-		// this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
-		// this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
+		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
+		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
 
-		// var isDown = false;
-		// function onPointer(e:PointerEvent) {
-		// 	_thirstyArms.setTarget(e.viewX, e.viewY);
-		// }
+		var isDown = false;
+		function onPointer(e:PointerEvent) {
+			_thirstyArms.setTarget(e.viewX, e.viewY);
+		}
 
-		// this._disposer.add(System.pointer.down.connect(e -> {
-		// 	isDown = true;
-		// 	onPointer(e);
-		// }));
-		// this._disposer.add(System.pointer.up.connect(e -> {
-		// 	if (isDown) {
-		// 		onPointer(e);
-		// 		this._thirstyArms.reset();
-		// 		isDown = false;
-		// 	}
-		// }));
-		// this._disposer.add(System.pointer.move.connect(e -> {
-		// 	if (isDown) {
-		// 		onPointer(e);
-		// 	}
-		// }));
+		this._disposer.add(System.pointer.down.connect(e -> {
+			isDown = true;
+			onPointer(e);
+		}));
+		this._disposer.add(System.pointer.up.connect(e -> {
+			if (isDown) {
+				onPointer(e);
+				this._thirstyArms.reset();
+				isDown = false;
+			}
+		}));
+		this._disposer.add(System.pointer.move.connect(e -> {
+			if (isDown) {
+				onPointer(e);
+			}
+		}));
 	}
 
 	private var _root:Entity;
