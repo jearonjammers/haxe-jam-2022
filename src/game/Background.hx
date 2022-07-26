@@ -1,5 +1,6 @@
 package game;
 
+import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.animation.Sine;
 import flambe.display.ImageSprite;
@@ -87,9 +88,9 @@ class BackgroundSun extends Component {
 			.addChild(new Entity().add(_stripes = new ImageSprite(pack.getTexture("sun/sunStripes")).centerAnchor())) //
 			.addChild(new Entity().add(_sun = new ImageSprite(pack.getTexture("sun/sun")).centerAnchor())) //
 			.addChild(new Entity().add(new ImageSprite(pack.getTexture("sun/ear")).setXY(-125, -35))) //
-			.add(new BackgroundSunSmile(pack))
-			.addChild(new Entity().add(new BackgroundSunEye(pack, 22, 0))) //
-			.addChild(new Entity().add(new BackgroundSunEye(pack, 110, 0))); //
+			.addChild(new Entity().add(new BackgroundSunEye(pack, -14, -50))) //
+			.addChild(new Entity().add(new BackgroundSunEye(pack, 72, -50))) //
+			.add(new BackgroundSunSmile(pack)); //
 	}
 
 	private var _root:Entity;
@@ -138,9 +139,11 @@ class BackgroundSunEye extends Component {
 	}
 
 	public function init(pack:AssetPack, x:Float, y:Float) {
-		this._root = new Entity();
-		this._root.add(new ImageSprite(pack.getTexture("sun/eye")).centerAnchor().setXY(x, y));
-		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("sun/eyePupil")).setXY(25, 36).centerAnchor()));
+		this._root = new Entity().add(new Sprite().setXY(x, y));
+		var eyeTex = pack.getTexture("sun/eye");
+		this._root.addChild(new Entity().add(new FillSprite(0xF4DEC9, eyeTex.width - 4, eyeTex.height - 4).setXY(2, 2)));
+		this._root.addChild(new Entity().add(_pupil = new ImageSprite(pack.getTexture("sun/eyePupil")).setXY(38, 70).centerAnchor()));
+		this._root.addChild(new Entity().add(new ImageSprite(eyeTex)));
 		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("sun/eyebrow")).setXY(24, -12).centerAnchor()));
 	}
 
