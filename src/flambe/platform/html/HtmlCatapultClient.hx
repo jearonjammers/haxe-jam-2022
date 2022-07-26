@@ -11,8 +11,8 @@ class HtmlCatapultClient extends CatapultClient
 {
     public static function canUse () :Bool
     {
-        return Reflect.hasField(Browser.window, "WebSocket");
-        // return false;
+        // return Reflect.hasField(Browser.window, "WebSocket");
+        return false;
     }
 
     public function new ()
