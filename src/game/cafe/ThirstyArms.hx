@@ -1,9 +1,11 @@
 package game.cafe;
 
+import flambe.math.FMath;
 import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.Component;
+import game.MathUtil;
 
 using game.SpriteUtil;
 
@@ -63,34 +65,53 @@ class ThirstyArm extends Component {
 	public function setTarget(viewX:Float, viewY:Float):ThirstyArm {
 		this._viewX = viewX;
 		this._viewY = viewY;
+		_hasUpdate = true;
 		return this;
 	}
 
 	private function updateReach() {
+		if (!_hasUpdate) {
+			return;
+		}
+		_hasUpdate = false;
 		var rootSpr = this._root.get(Sprite);
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
 
+		var isReflected = !this._isFlipped;
+
 		var local = rootSpr.localXY(this._viewX, this._viewY);
-		var angleDeg = this._isFlipped ? rotFlip(local.x, local.y) : rotNorm(local.x, local.y);
+		var localY = isReflected ? -local.y : local.y;
+		var angleRads = this._isFlipped ? rotFlip(local.x, localY) : rotNorm(local.x, localY);
 		var distance = local.distanceTo(0, 0);
 		var distRemain = REACH - distance;
-		if(distRemain > 0) {
-			upperSpite.setRotation(angleDeg - 90);
-			lowerSprite.setRotation(50);
-		}
-		else {
-			upperSpite.setRotation(angleDeg - 90);
-			lowerSprite.setRotation(0);
+		if (distRemain > 0) {
+			var overlap = ARM_OVERLAP / 2;
+			var solve = MathUtil.solveTriangle(SEGMENT_LENGTH - overlap, SEGMENT_LENGTH - overlap, distance);
+			if (solve != null) {
+				var angleA = angleRads - 1.5708 - solve.a;
+				var angleB = solve.a + solve.b;
+
+				if (isReflected) {
+					upperSpite.setRotation(FMath.toDegrees(MathUtil.reflectAngle(angleA, true)));
+					lowerSprite.setRotation(FMath.toDegrees(MathUtil.reflectAngle(angleB, false)));
+				} else {
+					upperSpite.setRotation(FMath.toDegrees(angleA));
+					lowerSprite.setRotation(FMath.toDegrees(angleB));
+				}
+			}
+		} else {
+			// upperSpite.setRotation(angleDeg - 90);
+			// lowerSprite.setRotation(0);
 		}
 	}
 
 	private inline function rotFlip(x:Float, y:Float):Float {
-		return Math.atan2(y, x) * 180 / Math.PI;
+		return Math.atan2(y, x);
 	}
 
 	private inline function rotNorm(x:Float, y:Float):Float {
-		return Math.atan2(y, x) * 180 / Math.PI;
+		return Math.atan2(y, x);
 	}
 
 	public function init(x:Float, y:Float) {
@@ -119,6 +140,7 @@ class ThirstyArm extends Component {
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
+	private var _hasUpdate:Bool = false;
 
 	private static var SEGMENT_LENGTH = 230;
 	private static var UPPERARM_WIDTH = 85;
