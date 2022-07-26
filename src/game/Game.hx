@@ -25,6 +25,18 @@ class Game extends Component {
 		this._disposer.dispose();
 	}
 
+	override function onUpdate(dt:Float) {
+		_elapsed += dt;
+		if(_elapsed > 5) {
+			_elapsed = 0;
+			if(Math.random() > 0.5) {
+				_thirstyArms.wave();
+			} else {
+				_thirstyArms.slam();
+			}
+		}
+	}
+
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		this._disposer = new Disposer();
 		this._root = new Entity();
@@ -66,4 +78,5 @@ class Game extends Component {
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
 	private var _disposer:Disposer;
+	private var _elapsed = 0.0;
 }

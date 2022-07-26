@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.script.Repeat;
+import flambe.math.Point;
 import flambe.script.Delay;
 import flambe.script.Parallel;
 import flambe.animation.Ease;
@@ -35,15 +37,25 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
+	public function wave():ThirstyArms {
+		this._right.get(ThirstyArm).wave();
+		return this;
+	}
+
+	public function slam():ThirstyArms {
+		this._right.get(ThirstyArm).slam();
+		return this;
+	}
+
 	public function init(width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
 		this._left = new Entity().add(new ThirstyArm(-150, 0, false).setTarget(width - 200, 400));
-		this._right = new Entity().add(new ThirstyArm(150, 0, true).setTarget(width + 200, 700).wave());
+		this._right = new Entity().add(new ThirstyArm(150, 0, true).setTarget(width + 200, 700));
 
 		this._root //
-			.addChild(this._left) //
-			.addChild(this._right);
+			.addChild(this._right)
+			.addChild(this._left); //
 	}
 
 	private var _root:Entity;
@@ -74,34 +86,67 @@ class ThirstyArm extends Component {
 	public function setTarget(viewX:Float, viewY:Float):ThirstyArm {
 		this._viewX = viewX;
 		this._viewY = viewY;
-		_hasUpdate = true;
 		return this;
 	}
 
 	public function wave():ThirstyArm {
 		this.isStale = true;
 
+		calcAngles(200, -430);
+		var angleTop1 = _upperAngle;
+		var angleBottom1 = _lowerAngle;
+		calcAngles(200, -230);
+		var angleTop2 = _upperAngle;
+		var angleBottom2 = _lowerAngle;
+
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
-		upperSpite.rotation._ = 210;
+		upperSpite.rotation._ = angleTop1;
+		lowerSprite.rotation._ = angleBottom1;
+		this._root.add(new Script()).get(Script).run(new Sequence([
+			new Repeat(new Sequence([
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop2, 0.24, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom2, 0.24, Ease.cubeIn),
+				]),
+				new Parallel([
+					new AnimateTo(upperSpite.rotation, angleTop1, 0.3, Ease.cubeIn),
+					new AnimateTo(lowerSprite.rotation, angleBottom1, 0.3, Ease.cubeIn),
+				])
+			]), 3),
+			new Delay(0.5),
+			new CallFunction(() -> {
+				this.isStale = false;
+			})
+		]));
+
+		return this;
+	}
+
+	public function slam():ThirstyArm {
+		this.isStale = true;
+
+		calcAngles(300, 230);
+		var angleTop1 = _upperAngle;
+		var angleBottom1 = _lowerAngle;
+		calcAngles(300, -730);
+		var angleTop2 = _upperAngle;
+		var angleBottom2 = _lowerAngle;
+
+		var upperSpite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
+		upperSpite.rotation._ = angleTop1;
+		lowerSprite.rotation._ = angleBottom1;
 		this._root.add(new Script()).get(Script).run(new Sequence([
 			new Parallel([
-				new AnimateTo(upperSpite.rotation, 260, 0.6, Ease.cubeIn),
-				new AnimateTo(lowerSprite.rotation, -100, 0.6, Ease.cubeIn),
+				new AnimateTo(upperSpite.rotation, angleTop2, 0.5, Ease.cubeIn),
+				new AnimateTo(lowerSprite.rotation, angleBottom2, 0.5, Ease.cubeIn),
 			]),
 			new Parallel([
-				new AnimateTo(upperSpite.rotation, 210, 0.5, Ease.cubeIn),
-				new AnimateTo(lowerSprite.rotation, 0, 0.5, Ease.cubeIn),
+				new AnimateTo(upperSpite.rotation, angleTop1, 0.135, Ease.bounceOut),
+				new AnimateTo(lowerSprite.rotation, angleBottom1, 0.135, Ease.bounceOut),
 			]),
-			new Parallel([
-				new AnimateTo(upperSpite.rotation, 300, 0.6, Ease.cubeIn),
-				new AnimateTo(lowerSprite.rotation, -100, 0.6, Ease.cubeIn),
-			]),
-			new Parallel([
-				new AnimateTo(upperSpite.rotation, 210, 0.5, Ease.cubeIn),
-				new AnimateTo(lowerSprite.rotation, 0, 0.5, Ease.cubeIn),
-			]),
-			new Delay(0.4),
+			new Delay(0.5),
 			new CallFunction(() -> {
 				this.isStale = false;
 			})
@@ -125,21 +170,28 @@ class ThirstyArm extends Component {
 	}
 
 	private function updateReach() {
-		if (!_hasUpdate || isStale) {
+		if (isStale) {
 			return;
 		}
-		_hasUpdate = false;
 		var rootSpr = this._root.get(Sprite);
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
 
 		var local = rootSpr.localXY(this._viewX, this._viewY);
-		var rawAngle = getAngle(local.x, local.y);
+		calcAngles(local.x, local.y);
+		upperSpite.setRotation(_upperAngle);
+		lowerSprite.setRotation(_lowerAngle);
+	}
+
+	private function calcAngles(localX:Float, localY:Float) {
+		_scratchLocal.x = localX;
+		_scratchLocal.y = localY;
+		var rawAngle = getAngle(_scratchLocal.x, _scratchLocal.y);
 		var isReflected = reflectAngle(MathUtil.quadrant(rawAngle));
 
-		var localY = isReflected ? -local.y : local.y;
-		var angleRads = getAngle(local.x, localY);
-		var distance = local.distanceTo(0, 0);
+		var _localY = isReflected ? -_scratchLocal.y : _scratchLocal.y;
+		var angleRads = getAngle(_scratchLocal.x, _localY);
+		var distance = _scratchLocal.distanceTo(0, 0);
 		var distRemain = REACH - distance;
 		if (distRemain > 0) {
 			var overlap = ARM_OVERLAP / 2;
@@ -149,16 +201,16 @@ class ThirstyArm extends Component {
 				var angleB = solve.a + solve.b;
 
 				if (isReflected) {
-					upperSpite.setRotation(FMath.toDegrees(MathUtil.reflectAngle(angleA, true)));
-					lowerSprite.setRotation(FMath.toDegrees(MathUtil.reflectAngle(angleB, false)));
+					_upperAngle = FMath.toDegrees(MathUtil.reflectAngle(angleA, true));
+					_lowerAngle = FMath.toDegrees(MathUtil.reflectAngle(angleB, false));
 				} else {
-					upperSpite.setRotation(FMath.toDegrees(angleA));
-					lowerSprite.setRotation(FMath.toDegrees(angleB));
+					_upperAngle = FMath.toDegrees(angleA);
+					_lowerAngle = FMath.toDegrees(angleB);
 				}
 			}
 		} else {
-			upperSpite.setRotation(FMath.toDegrees(rawAngle) - 90);
-			lowerSprite.setRotation(0);
+			_upperAngle = FMath.toDegrees(rawAngle) - 90;
+			_lowerAngle = 0;
 		}
 	}
 
@@ -192,9 +244,11 @@ class ThirstyArm extends Component {
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
-	private var _hasUpdate:Bool = false;
+	private var _upperAngle:Float = 0;
+	private var _lowerAngle:Float = 0;
+	private var _scratchLocal:Point = new Point();
 
-	private static var SEGMENT_LENGTH = 230;
+	private static var SEGMENT_LENGTH = 290;
 	private static var UPPERARM_WIDTH = 85;
 	private static var LOWERARM_WIDTH = 80;
 	private static var ARM_OVERLAP = 5;
