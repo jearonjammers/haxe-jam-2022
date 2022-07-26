@@ -1,12 +1,14 @@
 package game.cafe;
 
+import flambe.display.ImageSprite;
+import flambe.asset.AssetPack;
 import flambe.display.FillSprite;
 import flambe.Entity;
 import flambe.Component;
 
 class BarTable extends Component {
-	public function new(width:Int, height:Int) {
-		this.init(width, height);
+	public function new(pack:AssetPack, height:Int) {
+		this.init(pack, height);
 	}
 
 	override function onAdded() {
@@ -17,9 +19,10 @@ class BarTable extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(width:Int, height:Int) {
+	public function init(pack:AssetPack, height:Int) {
 		this._root = new Entity();
-		this._root.add(new FillSprite(0xfff000, width, 300).setXY(0, height - 300));
+		var table = pack.getTexture("table");
+		this._root.add(new ImageSprite(table).setXY(-3, height - table.height));
 		_slots = [];
 		for (i in 0...5) {
 			var x = 250 * i + 380;
