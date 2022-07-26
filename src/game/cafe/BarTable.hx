@@ -24,6 +24,7 @@ class BarTable extends Component {
 		var table = pack.getTexture("table");
 		this._root.add(new ImageSprite(table).setXY(-3, height - table.height));
 		_slots = [];
+		return;
 		for (i in 0...5) {
 			var x = 250 * i + 380;
 			var y = i % 2 == 0 ? 80 : 150;
