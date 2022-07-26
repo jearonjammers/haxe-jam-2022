@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
 import flambe.System;
 import flambe.animation.AnimatedFloat;
@@ -60,8 +61,10 @@ class ThirstyArms extends Component {
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
-		this._left = new Entity().add(new ThirstyArm(pack, -150, 0, false));
-		this._right = new Entity().add(new ThirstyArm(pack, 150, 0, true));
+		var x = 230;
+		var y = 180;
+		this._left = new Entity().add(new ThirstyArm(pack, -x + 10, y, false));
+		this._right = new Entity().add(new ThirstyArm(pack, x + 10, y, true));
 
 		this._root //
 			.addChild(this._right).addChild(this._left); //
@@ -176,10 +179,10 @@ class ThirstyArm extends Component {
 	public function init(pack:AssetPack, x:Float, y:Float) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //
-			.add(new FillSprite(0xff0000, ThirstyArmActions.UPPERARM_WIDTH, ThirstyArmActions.SEGMENT_LENGTH_TOP) //
+			.add(new ImageSprite(pack.getTexture("body/armTop")) //
 				.setAnchor(ThirstyArmActions.UPPERARM_WIDTH / 2, 0));
 		this._lower = new Entity() //
-			.add(new FillSprite(0xffaaaa, ThirstyArmActions.LOWERARM_WIDTH, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM) //
+			.add(new ImageSprite(pack.getTexture("body/armBottom")) //
 				.setXY(ThirstyArmActions.UPPERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_TOP) //
 				.setAnchor(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.ARM_OVERLAP));
 		this._hand = new Entity() //
