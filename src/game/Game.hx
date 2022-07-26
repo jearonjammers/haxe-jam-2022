@@ -56,6 +56,7 @@ class Game extends Component {
 		this._meterDrink = new Entity().add(new Meter(width - 120, 40).setFill(.25));
 		this._root //
 			.add(new Background(pack)) //
+			.add(new PlayButton(pack)) //
 				// .add(this._thirstyPerson = new ThirstyPerson(width, height)) //
 			.add(this._barTable = new BarTable(pack, height)); //
 		// .add(this._thirstyArms = new ThirstyArms(width, height)) //
