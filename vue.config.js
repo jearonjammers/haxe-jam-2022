@@ -1,6 +1,6 @@
 // vue.config.js
 module.exports = {
-  publicPath: "haxe-jam-2022",
+  publicPath: "/haxe-jam-2022",
   chainWebpack: (config) => {
     // GraphQL Loader
     config.module
