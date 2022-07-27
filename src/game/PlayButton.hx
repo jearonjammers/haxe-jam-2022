@@ -1,5 +1,6 @@
 package game;
 
+import flambe.util.Signal0;
 import flambe.Disposer;
 import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
@@ -9,7 +10,10 @@ import flambe.Component;
 using game.ButtonUtil;
 
 class PlayButton extends Component {
+	public var click :Signal0;
+
 	public function new(pack:AssetPack) {
+		this.click = new Signal0();
 		this.init(pack);
 	}
 
@@ -29,7 +33,7 @@ class PlayButton extends Component {
 		this._root.add(spr);
 
 		spr.addStates(() -> {
-			trace("click");
+			this.click.emit();
 		}, this._disposer);
 	}
 

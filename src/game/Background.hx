@@ -1,5 +1,6 @@
 package game;
 
+import flambe.animation.Ease;
 import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.animation.Sine;
@@ -19,6 +20,15 @@ class Background extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
+	}
+
+	public function nextState() : Void {
+		var titleSpr = this._title.get(Sprite);
+		titleSpr.y.animateTo(-600, 4, Ease.cubeOut);
+		titleSpr.x.animateTo(1400, 4, Ease.cubeOut);
+		titleSpr.rotation.animateTo(-20, 4, Ease.cubeOut);
+		this._flamingo.anchorX.animateTo(-140, 4);
+		this._flamingo.anchorY.animateTo(60, 4);
 	}
 
 	public function init(pack:AssetPack) {

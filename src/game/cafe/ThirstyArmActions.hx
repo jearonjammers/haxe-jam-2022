@@ -26,7 +26,6 @@ class ThirstyArmActions extends Component {
 	public static inline var UPPERARM_WIDTH = 93;
 	public static inline var LOWERARM_WIDTH = 79;
 	public static inline var ARM_OVERLAP = 30;
-	public static inline var HAND_DIM = 90;
 	public static inline var REACH = SEGMENT_LENGTH_TOP + SEGMENT_LENGTH_BOTTOM - ARM_OVERLAP;
 
 	public static function wave(onComplete:Void->Void, root :Entity, upperSpite:Sprite, lowerSprite:Sprite, isFlipped:Bool):Void {

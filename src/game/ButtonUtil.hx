@@ -17,7 +17,6 @@ class ButtonUtil {
 
 		disposer.add(sprite.pointerOut.connect(_ -> {
 			sprite.setScale(1);
-			isDown = false;
 		}));
 
 		disposer.add(sprite.pointerDown.connect(_ -> {
@@ -25,9 +24,9 @@ class ButtonUtil {
 			isDown = true;
 		}));
 
-		disposer.add(System.pointer.up.connect(_ -> {
+		disposer.add(System.pointer.up.connect(e -> {
 			sprite.setScale(1);
-			if (isDown) {
+			if (isDown && e.hit == sprite) {
 				isDown = false;
 				onClick();
 			}

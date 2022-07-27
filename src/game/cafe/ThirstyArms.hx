@@ -88,9 +88,9 @@ class ThirstyArm extends Component {
 	}
 
 	override function onStart() {
-		var offset = this._isFlipped ? 120 : -120;
+		var offset = this._isFlipped ? 260 : -260;
 		var x = System.stage.width / 2 + offset;
-		var y = System.stage.height / 2 + 150;
+		var y = System.stage.height / 2 + 180;
 		this._startX = this._viewX = x;
 		this._startY = this._viewY = y;
 	}
@@ -185,10 +185,9 @@ class ThirstyArm extends Component {
 			.add(new ImageSprite(pack.getTexture("body/armBottom")) //
 				.setXY(ThirstyArmActions.UPPERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_TOP) //
 				.setAnchor(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.ARM_OVERLAP));
-		this._hand = new Entity() //
-			.add(new FillSprite(0xffdddd, ThirstyArmActions.HAND_DIM, ThirstyArmActions.HAND_DIM) //
-				.setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM) //
-				.centerAnchor());
+
+		this._hand = new Entity().add(new Sprite().setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM));
+		this._hand.addChild(new Entity().add(new ImageSprite(pack.getTexture("body/hand")).setAnchor(52, 80)));
 
 		this._root.addChild(this._upper);
 		this._upper.addChild(this._lower);
