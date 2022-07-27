@@ -69,8 +69,8 @@ class ThirstyArm extends Component {
 	public var isStale:Bool = false;
 
 	public function new(pack:AssetPack, x:Float, y:Float, isFlipped:Bool) {
-		this.init(pack, x, y);
 		this._isFlipped = isFlipped;
+		this.init(pack, x, y);
 	}
 
 	override function onAdded() {
@@ -186,26 +186,28 @@ class ThirstyArm extends Component {
 		this._upper.addChild(this._lower);
 		this._lower.addChild(this._hand);
 
-		this._disposer.add(System.pointer.down.connect(e -> {
-			this._viewX = e.viewX;
-			this._viewY = e.viewY;
-			this._isDown = true;
-		}));
-
-		this._disposer.add(System.pointer.move.connect(e -> {
-			if (this._isDown) {
+		if (!this._isFlipped) {
+			this._disposer.add(System.pointer.down.connect(e -> {
 				this._viewX = e.viewX;
 				this._viewY = e.viewY;
-			}
-		}));
+				this._isDown = true;
+			}));
 
-		this._disposer.add(System.pointer.up.connect(e -> {
-			if (this._isDown) {
-				this._isDown = false;
-				this._viewX = e.viewX;
-				this._viewY = e.viewY;
-			}
-		}));
+			this._disposer.add(System.pointer.move.connect(e -> {
+				if (this._isDown) {
+					this._viewX = e.viewX;
+					this._viewY = e.viewY;
+				}
+			}));
+
+			this._disposer.add(System.pointer.up.connect(e -> {
+				if (this._isDown) {
+					this._isDown = false;
+					this._viewX = e.viewX;
+					this._viewY = e.viewY;
+				}
+			}));
+		}
 	}
 
 	private var _root:Entity;

@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.animation.Ease;
 import flambe.display.Sprite;
 import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
@@ -19,8 +20,11 @@ class BarDrinks extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function addItem(slot:Int):Void {
-		var slot = _slots[slot];
+	public function addItem(slotIndex:Int):Void {
+		var slot = _slots[slotIndex];
+		var spr = slot.get(Sprite);
+		spr.anchorX._ = slotIndex > 2 ? -2000 : 2000;
+		spr.anchorX.animateTo(this._anchorX, 0.666, Ease.cubeOut);
 		slot.get(Sprite).visible = true;
 	}
 
@@ -37,9 +41,9 @@ class BarDrinks extends Component {
 		var tex = pack.getTexture("beerStar");
 		for (i in 0...bottlePositions.length) {
 			var pos = bottlePositions[i];
-			var anchorX = tex.width / 2;
+			this._anchorX = tex.width / 2;
 			var anchorY = tex.height - 10;
-			var e = new Entity().add(new Sprite().setAnchor(anchorX, anchorY).setXY(pos.x, pos.y + anchorY / 2));
+			var e = new Entity().add(new Sprite().setAnchor(this._anchorX, anchorY).setXY(pos.x, pos.y + anchorY / 2));
 			e.addChild(new Entity().add(new ImageSprite(tex)));
 			e.get(Sprite).visible = false;
 			_slots.push(e);
@@ -52,4 +56,5 @@ class BarDrinks extends Component {
 
 	private var _root:Entity;
 	private var _slots:Array<Entity>;
+	private var _anchorX:Float = 0;
 }

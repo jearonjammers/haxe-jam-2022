@@ -83,6 +83,8 @@ class Game extends Component {
 			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),
 			new CallFunction(() -> {
 				_anchorX.behavior = new Sine(-200, 200, 2);
+				this._barDrinks.addItem(2);
+				this._barDrinks.addItem(3);
 			})
 		]));
 	}

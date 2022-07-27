@@ -21,7 +21,7 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDev.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onBootstrapLoaded.bind(width, height)).once();
 	}
 
 	static function onDev(width:Int, height:Int, pack:AssetPack):Void {
