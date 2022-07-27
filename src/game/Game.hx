@@ -1,17 +1,13 @@
 package game;
 
-import flambe.script.Delay;
+import game.cafe.BarDrinks;
 import flambe.animation.Ease;
 import flambe.script.CallFunction;
 import flambe.script.AnimateTo;
 import flambe.script.Sequence;
 import flambe.script.Script;
-import flambe.display.ImageSprite;
-import flambe.SpeedAdjuster;
 import flambe.animation.Sine;
 import flambe.animation.AnimatedFloat;
-import flambe.input.PointerEvent;
-import flambe.System;
 import flambe.Disposer;
 import game.cafe.ThirstyArms;
 import game.cafe.Meter;
@@ -54,16 +50,18 @@ class Game extends Component {
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		_anchorX._ = 1900;
+		var METER_Y = 180;
 		this._disposer = new Disposer();
 		this._root = new Entity();
-		this._meterTime = new Entity().add(new Meter(20, 40));
-		this._meterDrink = new Entity().add(new Meter(width - 120, 40).setFill(.25));
+		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront"));
+		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront"));
 		this._root //
 			.add(new Background(pack)) //
 			.add(new PlayButton(pack)) //
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
-			.add(this._barTable = new BarTable(pack, height)) //
+			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
+			.add(this._barDrinks = new BarDrinks(pack))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
@@ -78,11 +76,13 @@ class Game extends Component {
 		_anchorY.behavior = new Sine(5, 0, 3);
 		_isGameplay = true;
 		this._root.get(PlayButton).dispose();
+		this._meterTime.get(Meter).show();
+		this._meterDrink.get(Meter).show();
 
 		this._root.add(new Script()).get(Script).run(new Sequence([
-			new AnimateTo(_anchorX, -40, 3, Ease.cubeOut),
+			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),
 			new CallFunction(() -> {
-				_anchorX.behavior = new Sine(-40, 40, 2);
+				_anchorX.behavior = new Sine(-200, 200, 2);
 			})
 		]));
 	}
@@ -90,7 +90,7 @@ class Game extends Component {
 	private var _root:Entity;
 	private var _meterTime:Entity;
 	private var _meterDrink:Entity;
-	private var _barTable:BarTable;
+	private var _barDrinks:BarDrinks;
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
 	private var _disposer:Disposer;

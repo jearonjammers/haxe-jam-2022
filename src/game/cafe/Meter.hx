@@ -1,14 +1,17 @@
 package game.cafe;
 
+import flambe.animation.Ease;
+import flambe.math.Rectangle;
+import flambe.display.ImageSprite;
+import flambe.asset.AssetPack;
 import flambe.math.FMath;
-import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.Component;
 
 class Meter extends Component {
-	public function new(x:Float, y:Float) {
-		this.init(x, y);
+	public function new(pack:AssetPack, x:Float, y:Float, front:String) {
+		this.init(pack, x, y, front);
 	}
 
 	override function onAdded() {
@@ -19,23 +22,30 @@ class Meter extends Component {
 		owner.removeChild(this._root);
 	}
 
+	public function show() {
+		this._root.get(Sprite).anchorY.animateTo(0, 1, Ease.cubeOut);
+	}
+
 	public function setFill(percent:Float):Meter {
 		var p = FMath.clamp(percent, 0, 1);
-		this._fill.height._ = HEIGHT_MAX * p;
-		this._fill.y._ = HEIGHT_MAX - this._fill.height._ + 3;
+		var val = this._fill.getNaturalHeight() - p * this._fill.getNaturalHeight();
+		this._fill.scissor.y = val;
 		return this;
 	}
 
-	public function init(x:Float, y:Float) {
+	public function init(pack:AssetPack, x:Float, y:Float, front:String) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
+		this._root.get(Sprite).anchorY._ = 1000;
 
-		var backing = new Entity().add(new FillSprite(0x111111, 100, 700));
-		var fill = new Entity().add(this._fill = cast new FillSprite(0xffaaee, 94, HEIGHT_MAX).setXY(3, 3));
+		var back = new Entity().add(new ImageSprite(pack.getTexture("meterBack")));
+		var mid = new Entity().add(_fill = new ImageSprite(pack.getTexture("timeMid")));
+		this._fill.scissor = new Rectangle(0, 0, this._fill.getNaturalWidth(), this._fill.getNaturalHeight());
+		var front = new Entity().add(new ImageSprite(pack.getTexture(front)).setXY(-26, 0));
 
-		this._root.addChild(backing).addChild(fill);
+		this._root.addChild(back).addChild(mid).addChild(front);
 	}
 
-	private var _fill:FillSprite;
+	private var _fill:ImageSprite;
 	private var _root:Entity;
 
 	private static var HEIGHT_MAX = 694;

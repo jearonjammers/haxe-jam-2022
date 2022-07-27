@@ -24,11 +24,11 @@ class Background extends Component {
 
 	public function nextState() : Void {
 		var titleSpr = this._title.get(Sprite);
-		titleSpr.y.animateTo(-600, 4, Ease.cubeOut);
-		titleSpr.x.animateTo(1400, 4, Ease.cubeOut);
-		titleSpr.rotation.animateTo(-20, 4, Ease.cubeOut);
-		this._flamingo.anchorX.animateTo(-140, 4);
-		this._flamingo.anchorY.animateTo(60, 4);
+		titleSpr.y.animateTo(-600, 2, Ease.cubeOut);
+		titleSpr.x.animateTo(1400, 2, Ease.cubeOut);
+		titleSpr.rotation.animateTo(-20, 2, Ease.cubeOut);
+		this._flamingo.anchorX.animateTo(-140, 2, Ease.cubeOut);
+		this._flamingo.anchorY.animateTo(60, 2, Ease.cubeOut);
 	}
 
 	public function init(pack:AssetPack) {
