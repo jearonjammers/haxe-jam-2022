@@ -53,7 +53,7 @@ class Game extends Component {
 	}
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
-		_anchorX._ = 1600;
+		_anchorX._ = 1900;
 		this._disposer = new Disposer();
 		this._root = new Entity();
 		this._meterTime = new Entity().add(new Meter(20, 40));
@@ -76,34 +76,13 @@ class Game extends Component {
 	public function nextState() {
 		this._root.get(Background).nextState();
 		_anchorY.behavior = new Sine(5, 0, 3);
+		_isGameplay = true;
+		this._root.get(PlayButton).dispose();
 
 		this._root.add(new Script()).get(Script).run(new Sequence([
-			new AnimateTo(_anchorX, -40, 4, Ease.backOut),
+			new AnimateTo(_anchorX, -40, 3, Ease.cubeOut),
 			new CallFunction(() -> {
 				_anchorX.behavior = new Sine(-40, 40, 2);
-				_isGameplay = true;
-
-				var isDown = false;
-				function onPointer(e:PointerEvent) {
-					_thirstyArms.setTarget(e.viewX, e.viewY);
-				}
-
-				this._disposer.add(System.pointer.down.connect(e -> {
-					isDown = true;
-					onPointer(e);
-				}));
-				this._disposer.add(System.pointer.up.connect(e -> {
-					if (isDown) {
-						onPointer(e);
-						this._thirstyArms.reset();
-						isDown = false;
-					}
-				}));
-				this._disposer.add(System.pointer.move.connect(e -> {
-					if (isDown) {
-						onPointer(e);
-					}
-				}));
 			})
 		]));
 	}

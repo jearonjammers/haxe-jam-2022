@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.animation.Sine;
+import flambe.Disposer;
 import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
 import flambe.System;
@@ -24,12 +26,6 @@ class ThirstyArms extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function setTarget(viewX:Float, viewY:Float):ThirstyArms {
-		this._left.get(ThirstyArm).setTarget(viewX, viewY);
-		this._right.get(ThirstyArm).setTarget(viewX, viewY);
-		return this;
-	}
-
 	public function bindTo(anchorX:AnimatedFloat, anchorY:AnimatedFloat, rotation:AnimatedFloat) {
 		this._root.get(Sprite).anchorX.bindTo(anchorX);
 		this._root.get(Sprite).anchorY.bindTo(anchorY);
@@ -49,12 +45,6 @@ class ThirstyArms extends Component {
 	public function success():ThirstyArms {
 		this._left.get(ThirstyArm).success();
 		this._right.get(ThirstyArm).success();
-		return this;
-	}
-
-	public function reset():ThirstyArms {
-		this._left.get(ThirstyArm).reset();
-		this._right.get(ThirstyArm).reset();
 		return this;
 	}
 
@@ -87,28 +77,21 @@ class ThirstyArm extends Component {
 		owner.addChild(this._root);
 	}
 
-	override function onStart() {
-		var offset = this._isFlipped ? 260 : -260;
-		var x = System.stage.width / 2 + offset;
-		var y = System.stage.height / 2 + 180;
-		this._startX = this._viewX = x;
-		this._startY = this._viewY = y;
-	}
-
-	public function reset() {
-		this._viewX = this._startX;
-		this._viewY = this._startY;
-	}
-
 	override function onRemoved() {
 		owner.removeChild(this._root);
+		this._disposer.dispose();
 	}
 
 	override function onUpdate(dt:Float) {
-		this.updateReach();
+		if (this._isDown) {
+			this.reaching();
+		} else {
+			this._idleAnim.update(dt);
+			this.idleing();
+		}
 	}
 
-	public function setTarget(viewX:Float, viewY:Float):ThirstyArm {
+	private function setTarget(viewX:Float, viewY:Float):ThirstyArm {
 		this._viewX = viewX;
 		this._viewY = viewY;
 		return this;
@@ -158,7 +141,7 @@ class ThirstyArm extends Component {
 		return isReflected;
 	}
 
-	private function updateReach() {
+	private function reaching() {
 		if (isStale) {
 			return;
 		}
@@ -172,11 +155,20 @@ class ThirstyArm extends Component {
 		lowerSprite.setRotation(ThirstyArmActions.lowerAngle);
 	}
 
+	private function idleing() {
+		var upperSpite = this._upper.get(Sprite);
+		var lowerSprite = this._lower.get(Sprite);
+		ThirstyArmActions.calcAngles(0, this._idleAnim._, this._isFlipped);
+		upperSpite.setRotation(ThirstyArmActions.upperAngle);
+		lowerSprite.setRotation(ThirstyArmActions.lowerAngle);
+	}
+
 	private inline function getAngle(x:Float, y:Float):Float {
 		return Math.atan2(y, x);
 	}
 
 	public function init(pack:AssetPack, x:Float, y:Float) {
+		this._disposer = new Disposer();
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //
 			.add(new ImageSprite(pack.getTexture("body/armTop")) //
@@ -188,10 +180,32 @@ class ThirstyArm extends Component {
 
 		this._hand = new Entity().add(new Sprite().setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM));
 		this._hand.addChild(new Entity().add(new ImageSprite(pack.getTexture("body/hand")).setAnchor(52, 80)));
+		this._idleAnim.behavior = new Sine(-500, -400, 0.5);
 
 		this._root.addChild(this._upper);
 		this._upper.addChild(this._lower);
 		this._lower.addChild(this._hand);
+
+		this._disposer.add(System.pointer.down.connect(e -> {
+			this._viewX = e.viewX;
+			this._viewY = e.viewY;
+			this._isDown = true;
+		}));
+
+		this._disposer.add(System.pointer.move.connect(e -> {
+			if (this._isDown) {
+				this._viewX = e.viewX;
+				this._viewY = e.viewY;
+			}
+		}));
+
+		this._disposer.add(System.pointer.up.connect(e -> {
+			if (this._isDown) {
+				this._isDown = false;
+				this._viewX = e.viewX;
+				this._viewY = e.viewY;
+			}
+		}));
 	}
 
 	private var _root:Entity;
@@ -201,6 +215,7 @@ class ThirstyArm extends Component {
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
-	private var _startX:Float = 0;
-	private var _startY:Float = 0;
+	private var _isDown:Bool = false;
+	private var _idleAnim = new AnimatedFloat(0);
+	private var _disposer:Disposer;
 }
