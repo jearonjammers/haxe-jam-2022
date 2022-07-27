@@ -26,7 +26,7 @@ class ArmUtil {
 	public static inline var ARM_OVERLAP = 30;
 	public static inline var REACH = SEGMENT_LENGTH_TOP + SEGMENT_LENGTH_BOTTOM - ARM_OVERLAP;
 
-	public static function wave(onComplete:Void->Void, root:Entity, upperSpite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float}, isFlipped:Bool):Void {
+	public static function wave(onComplete:Void->Void, root:Entity, upperSpite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float, canReach:Bool}, isFlipped:Bool):Void {
 		calcAngles(200, -430, angles, isFlipped);
 		var angleTop1 = angles.top;
 		var angleBottom1 = angles.bottom;
@@ -52,7 +52,7 @@ class ArmUtil {
 		]));
 	}
 
-	public static function success(onComplete:Void->Void, root:Entity, upperSprite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float},
+	public static function success(onComplete:Void->Void, root:Entity, upperSprite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float, canReach:Bool},
 			isFlipped:Bool):Void {
 		var rootSpr = root.get(Sprite);
 
@@ -102,7 +102,7 @@ class ArmUtil {
 		]));
 	}
 
-	public static function slam(onComplete:Void->Void, root:Entity, upperSprite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float},
+	public static function slam(onComplete:Void->Void, root:Entity, upperSprite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float, canReach:Bool},
 			isFlipped:Bool):Void {
 		calcAngles(300, 230, angles, isFlipped);
 		var angleTop1 = angles.top;
@@ -127,7 +127,7 @@ class ArmUtil {
 		]));
 	}
 
-	public static function calcAngles(localX:Float, localY:Float, angles:{top:Float, bottom:Float}, isFlipped:Bool) {
+	public static function calcAngles(localX:Float, localY:Float, angles:{top:Float, bottom:Float, canReach:Bool}, isFlipped:Bool) {
 		_scratchLocal.x = localX;
 		_scratchLocal.y = localY;
 		var rawAngle = getAngle(_scratchLocal.x, _scratchLocal.y);
@@ -137,7 +137,8 @@ class ArmUtil {
 		var angleRads = getAngle(_scratchLocal.x, _localY);
 		var distance = _scratchLocal.distanceTo(0, 0);
 		var distRemain = REACH - distance;
-		if (distRemain > 0) {
+		angles.canReach = distRemain > 0;
+		if (angles.canReach ) {
 			var overlap = ARM_OVERLAP / 2;
 			var solve = MathUtil.solveTriangle(SEGMENT_LENGTH_BOTTOM - overlap, SEGMENT_LENGTH_TOP - overlap, distance);
 			if (solve != null) {

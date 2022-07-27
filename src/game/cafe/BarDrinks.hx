@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.Disposer;
+import flambe.util.Value;
 import flambe.System;
 import flambe.script.CallFunction;
 import flambe.script.AnimateTo;
@@ -25,15 +27,12 @@ class BarDrinks extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
-	}
-
-	public function showItem(slotIndex:Int, instant:Bool):Void {
-		var slot = _slots[slotIndex];
-		slot.show(instant);
+		this._disposer.dispose();
 	}
 
 	public function init(pack:AssetPack, arms:ThirstyArms) {
 		this._root = new Entity();
+		this._disposer = new Disposer();
 		_slots = [];
 		var bottlePositions = [
 			{x: 406, y: 885},
@@ -46,24 +45,44 @@ class BarDrinks extends Component {
 			var pos = bottlePositions[i];
 			var drink = new BarDrink(pack, pos.x, pos.y, arms);
 			var e = new Entity().add(drink);
-			drink.hide();
+			drink.turnOff();
 			_slots.push(drink);
 			this._root.addChild(e);
 		}
-		showItem(0, true);
-		showItem(1, true);
-		showItem(4, true);
+
+		_disposer.add(System.pointer.move.connect(e -> {
+			if (System.pointer.isDown()) {
+				for (slot in _slots) {
+					slot.handPos(e.viewX, e.viewY);
+				}
+			}
+		}));
+
+		_slots[0].show(true);
+		_slots[1].show(true);
+		_slots[2].show(true);
+		_slots[3].show(true);
+		_slots[4].show(true);
 	}
 
 	private var _root:Entity;
+	private var _disposer:Disposer;
 	private var _slots:Array<BarDrink>;
 }
 
+enum BarDrinkState {
+	Destroyed(ref:{time:Float});
+	Idle;
+	Sliding;
+	Active(ref:{time:Float});
+	Off;
+}
+
 class BarDrink extends Component {
-	public var isAvailable(default, null):Bool;
+	public var state(default, null):Value<BarDrinkState>;
 
 	public function new(pack:AssetPack, x:Float, y:Float, arms:ThirstyArms) {
-		this.isAvailable = true;
+		this.state = new Value(Off);
 		this.init(pack, x, y, arms);
 	}
 
@@ -76,20 +95,30 @@ class BarDrink extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
-		if (this.isAvailable && System.pointer.isDown()) {
-			var vX = System.pointer.x;
-			var vY = System.pointer.y;
-			handPos(vX, vY);
+		switch this.state._ {
+			case Destroyed(ref):
+				ref.time += dt;
+				if (ref.time >= DESTROYED_DURATION) {
+					this.show(true);
+				}
+			case Idle:
+			case Active(ref):
+				ref.time += dt;
+				if (ref.time >= ACTIVE_DURATION) {
+					this.toss();
+				}
+			case Off:
+			case Sliding:
 		}
 	}
 
-	private function handPos(viewX:Float, viewY:Float):Bool {
+	public function handPos(viewX:Float, viewY:Float):Bool {
 		var rootSpr = this._root.get(Sprite);
 		var local = rootSpr.localXY(viewX, viewY);
 
 		if (isHit(local.x, local.y)) {
-			// trace("hit");
-		} else {}
+			this.toss();
+		}
 		return false;
 	}
 
@@ -109,44 +138,55 @@ class BarDrink extends Component {
 		this._root = new Entity();
 		var tex = pack.getTexture("beerStar");
 		this._anchorX = tex.width / 2;
-		var anchorY = tex.height - 10;
-		var spr = new ImageSprite(tex).setAnchor(_anchorX, anchorY).setXY(x, y + anchorY / 2);
+		this._anchorY = tex.height - 10;
+		var spr = new ImageSprite(tex).setAnchor(_anchorX, _anchorY).setXY(x, y + _anchorY / 2);
 		_root.add(spr);
 	}
 
 	public function show(instant:Bool) {
 		var spr = this._root.get(Sprite);
+		var isLeft = spr.x._ < 1920 / 2;
+		spr.anchorX._ = isLeft ? 2000 : -2000;
+		spr.anchorY._ = _anchorY;
+		this.state._ = Sliding;
 		if (instant) {
-			this.isAvailable = true;
+			this.state._ = Idle;
 			spr.anchorX._ = this._anchorX;
 		} else {
 			this._root.add(new Script()).get(Script).run(new Sequence([
 				new AnimateTo(spr.anchorX, _anchorX, 0.666, Ease.cubeOut),
 				new CallFunction(() -> {
-					this.isAvailable = true;
+					this.state._ = Idle;
 				})
 			]));
 		}
 		spr.visible = true;
 	}
 
-	public function hide() {
-		this.isAvailable = false;
+	public function turnOff() {
+		this.state._ = Off;
 		var spr = this._root.get(Sprite);
 		spr.visible = false;
-		var isLeft = spr.x._ < 1920 / 2;
-		spr.anchorX._ = isLeft ? 2000 : -2000;
 	}
 
-	public function fly() {
-		this.isAvailable = false;
+	public function grab() {
+		this.state._ = Active({time: 0});
 		var spr = this._root.get(Sprite);
-		spr.visible = false;
-		var isLeft = spr.x._ < 1920 / 2;
-		spr.anchorX._ = isLeft ? 2000 : -2000;
+	}
+
+	public function toss() {
+		this.state._ = Destroyed({time: 0});
+		var spr = this._root.get(Sprite);
+		var x = Math.random() > 0.5 ? -500 : 500;
+		spr.anchorX.animateTo(x, 0.3333, Ease.sineIn);
+		spr.anchorY.animateTo(1350, 0.3333, Ease.sineOut);
 	}
 
 	private var _root:Entity;
 	private var _anchorX:Float;
+	private var _anchorY:Float;
 	private var _arms:ThirstyArms;
+
+	private static var DESTROYED_DURATION = 2;
+	private static var ACTIVE_DURATION = 2;
 }

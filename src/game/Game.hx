@@ -1,5 +1,10 @@
 package game;
 
+import flambe.math.FMath;
+import game.cafe.ArmUtil;
+import flambe.System;
+import flambe.display.Sprite;
+import flambe.display.FillSprite;
 import game.cafe.BarDrinks;
 import flambe.animation.Ease;
 import flambe.script.CallFunction;
@@ -46,6 +51,17 @@ class Game extends Component {
 				}
 			}
 		}
+		// var lt = _thirstyArms.getForearmAngle(true);
+		// var ld = -_thirstyArms.getForearmDistance(true);
+		// var p = SpriteUtil.localXY(this._root.get(Sprite), System.pointer.x, System.pointer.y);
+		// var angle = FMath.toRadians(lt - 90);
+
+		// var nx = ld * Math.cos(angle) + p.x;
+		// var ny = ld * Math.sin(angle) + p.y;
+
+		// _debugA.x._ = nx;
+		// _debugA.y._ = ny;
+		// _debugA.rotation._ = lt - 180;
 	}
 
 	public function init(pack:AssetPack, width:Int, height:Int) {
@@ -56,6 +72,7 @@ class Game extends Component {
 		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront").setFill(0.4));
 		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront"));
 		this._root //
+			.add(new Sprite())
 			.add(new Background(pack)) //
 			.add(new PlayButton(pack)) //
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
@@ -64,6 +81,9 @@ class Game extends Component {
 			.add(this._barDrinks = new BarDrinks(pack, this._thirstyArms))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
+
+		// this._root.addChild(new Entity().add(_debugA = cast new FillSprite(0xff0000, ArmUtil.LOWERARM_WIDTH,
+		// 	ArmUtil.SEGMENT_LENGTH_BOTTOM).setAnchor(ArmUtil.LOWERARM_WIDTH / 2, 0)));
 
 		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
 		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
@@ -83,8 +103,6 @@ class Game extends Component {
 			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),
 			new CallFunction(() -> {
 				_anchorX.behavior = new Sine(-200, 200, 2);
-				this._barDrinks.showItem(2, false);
-				this._barDrinks.showItem(3, false);
 			})
 		]));
 	}
@@ -101,4 +119,5 @@ class Game extends Component {
 	private var _anchorX = new AnimatedFloat(0);
 	private var _anchorY = new AnimatedFloat(0);
 	private var _rotation = new AnimatedFloat(0);
+	// private var _debugA:FillSprite;
 }

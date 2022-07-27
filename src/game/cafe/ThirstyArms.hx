@@ -1,5 +1,7 @@
 package game.cafe;
 
+import flambe.util.Value;
+import flambe.math.Point;
 import flambe.animation.Sine;
 import flambe.Disposer;
 import flambe.display.ImageSprite;
@@ -13,6 +15,9 @@ import flambe.Component;
 using game.SpriteUtil;
 
 class ThirstyArms extends Component {
+	public var isAvailable :Bool = true;
+	public var canReach(get, null) : Bool;
+
 	public function new(pack:AssetPack, width:Int, height:Int) {
 		this.init(pack, width, height);
 	}
@@ -41,6 +46,10 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
+	private function get_canReach() : Bool {
+		return this._left.get(ThirstyArm).canReach;
+	}
+
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
@@ -60,7 +69,7 @@ class ThirstyArms extends Component {
 
 class ThirstyArm extends Component {
 	public var isStale:Bool = false;
-	private var _angles:{top:Float, bottom:Float} = {top: 0, bottom: 0};
+	public var canReach(get, null) : Bool;
 
 	public function new(pack:AssetPack, x:Float, y:Float, isFlipped:Bool) {
 		this._isFlipped = isFlipped;
@@ -83,6 +92,10 @@ class ThirstyArm extends Component {
 			this._idleAnim.update(dt);
 			this.idleing();
 		}
+	}
+
+	private function get_canReach() : Bool {
+		return this._angles.canReach;
 	}
 
 	private function setTarget(viewX:Float, viewY:Float):ThirstyArm {
@@ -147,10 +160,6 @@ class ThirstyArm extends Component {
 		lowerSprite.setRotation(_angles.bottom);
 	}
 
-	private inline function getAngle(x:Float, y:Float):Float {
-		return Math.atan2(y, x);
-	}
-
 	public function init(pack:AssetPack, x:Float, y:Float) {
 		this._disposer = new Disposer();
 		this._root = new Entity().add(new Sprite().setXY(x, y));
@@ -169,6 +178,7 @@ class ThirstyArm extends Component {
 		this._root.addChild(this._upper);
 		this._upper.addChild(this._lower);
 		this._lower.addChild(this._hand);
+		this._lower.addChild(_elbowPoint = new Entity().add(new Sprite()));
 
 		if (!this._isFlipped) {
 			this._disposer.add(System.pointer.down.connect(e -> {
@@ -197,6 +207,7 @@ class ThirstyArm extends Component {
 	private var _root:Entity;
 	private var _upper:Entity;
 	private var _lower:Entity;
+	private var _elbowPoint:Entity;
 	private var _hand:Entity;
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
@@ -204,4 +215,5 @@ class ThirstyArm extends Component {
 	private var _isDown:Bool = false;
 	private var _idleAnim = new AnimatedFloat(0);
 	private var _disposer:Disposer;
+	private var _angles:{top:Float, bottom:Float, canReach:Bool} = {top: 0, bottom: 0, canReach: false};
 }
