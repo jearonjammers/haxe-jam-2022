@@ -41,6 +41,14 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
+	public function getAngles(isLeft:Bool):{top:Float, bottom:Float} {
+		if (isLeft) {
+			return this._left.get(ThirstyArm).angles;
+		} else {
+			return this._right.get(ThirstyArm).angles;
+		}
+	}
+
 	public function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
@@ -60,6 +68,7 @@ class ThirstyArms extends Component {
 
 class ThirstyArm extends Component {
 	public var isStale:Bool = false;
+	public var angles:{top:Float, bottom:Float} = {top: 0, bottom: 0};
 
 	public function new(pack:AssetPack, x:Float, y:Float, isFlipped:Bool) {
 		this._isFlipped = isFlipped;
@@ -96,7 +105,7 @@ class ThirstyArm extends Component {
 		var lowerSprite = this._lower.get(Sprite);
 		ArmUtil.wave(() -> {
 			this.isStale = false;
-		}, this._root, upperSprite, lowerSprite, this._angles, this._isFlipped);
+		}, this._root, upperSprite, lowerSprite, this.angles, this._isFlipped);
 		return this;
 	}
 
@@ -106,7 +115,7 @@ class ThirstyArm extends Component {
 		var lowerSprite = this._lower.get(Sprite);
 		ArmUtil.slam(() -> {
 			this.isStale = false;
-		}, this._root, upperSprite, lowerSprite, this._angles, this._isFlipped);
+		}, this._root, upperSprite, lowerSprite, this.angles, this._isFlipped);
 		return this;
 	}
 
@@ -133,17 +142,17 @@ class ThirstyArm extends Component {
 		var lowerSprite = this._lower.get(Sprite);
 
 		var local = rootSpr.localXY(this._viewX, this._viewY);
-		ArmUtil.calcAngles(local.x, local.y, this._angles, this._isFlipped);
-		upperSpite.setRotation(_angles.top);
-		lowerSprite.setRotation(_angles.bottom);
+		ArmUtil.calcAngles(local.x, local.y, this.angles, this._isFlipped);
+		upperSpite.setRotation(angles.top);
+		lowerSprite.setRotation(angles.bottom);
 	}
 
 	private function idleing() {
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
-		ArmUtil.calcAngles(0, this._idleAnim._, this._angles, this._isFlipped);
-		upperSpite.setRotation(_angles.top);
-		lowerSprite.setRotation(_angles.bottom);
+		ArmUtil.calcAngles(0, this._idleAnim._, this.angles, this._isFlipped);
+		upperSpite.setRotation(angles.top);
+		lowerSprite.setRotation(angles.bottom);
 	}
 
 	private inline function getAngle(x:Float, y:Float):Float {
@@ -201,7 +210,6 @@ class ThirstyArm extends Component {
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
 	private var _isDown:Bool = false;
-	private var _angles:{top:Float, bottom:Float} = {top: 0, bottom: 0};
 	private var _idleAnim = new AnimatedFloat(0);
 	private var _disposer:Disposer;
 }

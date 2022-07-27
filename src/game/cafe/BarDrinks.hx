@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.System;
 import flambe.script.CallFunction;
 import flambe.script.AnimateTo;
 import flambe.script.Sequence;
@@ -11,9 +12,11 @@ import flambe.asset.AssetPack;
 import flambe.Entity;
 import flambe.Component;
 
+using game.SpriteUtil;
+
 class BarDrinks extends Component {
-	public function new(pack:AssetPack) {
-		this.init(pack);
+	public function new(pack:AssetPack, arms:ThirstyArms) {
+		this.init(pack, arms);
 	}
 
 	override function onAdded() {
@@ -29,11 +32,7 @@ class BarDrinks extends Component {
 		slot.show(instant);
 	}
 
-	public function handPos(viewX:Float, viewY:Float):Bool {
-		return false;
-	}
-
-	public function init(pack:AssetPack) {
+	public function init(pack:AssetPack, arms:ThirstyArms) {
 		this._root = new Entity();
 		_slots = [];
 		var bottlePositions = [
@@ -45,7 +44,7 @@ class BarDrinks extends Component {
 		];
 		for (i in 0...bottlePositions.length) {
 			var pos = bottlePositions[i];
-			var drink = new BarDrink(pack, pos.x, pos.y);
+			var drink = new BarDrink(pack, pos.x, pos.y, arms);
 			var e = new Entity().add(drink);
 			drink.hide();
 			_slots.push(drink);
@@ -63,9 +62,9 @@ class BarDrinks extends Component {
 class BarDrink extends Component {
 	public var isAvailable(default, null):Bool;
 
-	public function new(pack:AssetPack, x:Float, y:Float) {
+	public function new(pack:AssetPack, x:Float, y:Float, arms:ThirstyArms) {
 		this.isAvailable = true;
-		this.init(pack, x, y);
+		this.init(pack, x, y, arms);
 	}
 
 	override function onAdded() {
@@ -76,17 +75,46 @@ class BarDrink extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function handPos(viewX:Float, viewY:Float):Bool {
+	override function onUpdate(dt:Float) {
+		if (this.isAvailable && System.pointer.isDown()) {
+			var vX = System.pointer.x;
+			var vY = System.pointer.y;
+			handPos(vX, vY, this._arms.getAngles(true));
+		}
+	}
+
+	private function handPos(viewX:Float, viewY:Float, angles:{top:Float, bottom:Float}):Bool {
+		var rootSpr = this._root.get(Sprite);
+		var local = rootSpr.localXY(viewX, viewY);
+		_debug.tri(local.x, local.y, angles);
+
+		if (isHit(local.x, local.y)) {
+			// trace("hit");
+		} else {}
 		return false;
 	}
 
-	public function init(pack:AssetPack, x:Float, y:Float) {
+	private inline function isHit(x:Float, y:Float):Bool {
+		var rootSpr = this._root.get(Sprite);
+		var x1 = 0;
+		var y1 = 0;
+
+		var x2 = x1 + rootSpr.getNaturalWidth();
+		var y2 = y1 + rootSpr.getNaturalHeight();
+
+		return x1 <= x && x <= x2 && y1 <= y && y <= y2;
+	}
+
+	private function init(pack:AssetPack, x:Float, y:Float, arms:ThirstyArms) {
+		this._arms = arms;
 		this._root = new Entity();
 		var tex = pack.getTexture("beerStar");
 		this._anchorX = tex.width / 2;
 		var anchorY = tex.height - 10;
 		var spr = new ImageSprite(tex).setAnchor(_anchorX, anchorY).setXY(x, y + anchorY / 2);
 		_root.add(spr);
+		this._root.addChild(new Entity().add(this._debug = new DebugSprite()));
+		this._debug.rect(0, 0, tex.width, tex.height);
 	}
 
 	public function show(instant:Bool) {
@@ -123,4 +151,6 @@ class BarDrink extends Component {
 
 	private var _root:Entity;
 	private var _anchorX:Float;
+	private var _arms:ThirstyArms;
+	private var _debug = new DebugSprite();
 }

@@ -53,7 +53,7 @@ class Game extends Component {
 		var METER_Y = 180;
 		this._disposer = new Disposer();
 		this._root = new Entity();
-		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront"));
+		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront").setFill(0.4));
 		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront"));
 		this._root //
 			.add(new Background(pack)) //
@@ -61,7 +61,7 @@ class Game extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._barDrinks = new BarDrinks(pack))
+			.add(this._barDrinks = new BarDrinks(pack, this._thirstyArms))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
