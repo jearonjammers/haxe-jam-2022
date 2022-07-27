@@ -6,7 +6,6 @@ import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
 import flambe.System;
 import flambe.animation.AnimatedFloat;
-import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.Component;
@@ -39,12 +38,6 @@ class ThirstyArms extends Component {
 
 	public function slam():ThirstyArms {
 		this._right.get(ThirstyArm).slam();
-		return this;
-	}
-
-	public function success():ThirstyArms {
-		this._left.get(ThirstyArm).success();
-		this._right.get(ThirstyArm).success();
 		return this;
 	}
 
@@ -101,9 +94,9 @@ class ThirstyArm extends Component {
 		this.isStale = true;
 		var upperSprite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
-		ThirstyArmActions.wave(() -> {
+		ArmUtil.wave(() -> {
 			this.isStale = false;
-		}, this._root, upperSprite, lowerSprite, this._isFlipped);
+		}, this._root, upperSprite, lowerSprite, this._angles, this._isFlipped);
 		return this;
 	}
 
@@ -111,19 +104,9 @@ class ThirstyArm extends Component {
 		this.isStale = true;
 		var upperSprite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
-		ThirstyArmActions.slam(() -> {
+		ArmUtil.slam(() -> {
 			this.isStale = false;
-		}, this._root, upperSprite, lowerSprite, this._isFlipped);
-		return this;
-	}
-
-	public function success():ThirstyArm {
-		this.isStale = true;
-		var upperSprite = this._upper.get(Sprite);
-		var lowerSprite = this._lower.get(Sprite);
-		ThirstyArmActions.success(() -> {
-			this.isStale = false;
-		}, this._root, upperSprite, lowerSprite, this._isFlipped);
+		}, this._root, upperSprite, lowerSprite, this._angles, this._isFlipped);
 		return this;
 	}
 
@@ -150,17 +133,17 @@ class ThirstyArm extends Component {
 		var lowerSprite = this._lower.get(Sprite);
 
 		var local = rootSpr.localXY(this._viewX, this._viewY);
-		ThirstyArmActions.calcAngles(local.x, local.y, this._isFlipped);
-		upperSpite.setRotation(ThirstyArmActions.upperAngle);
-		lowerSprite.setRotation(ThirstyArmActions.lowerAngle);
+		ArmUtil.calcAngles(local.x, local.y, this._angles, this._isFlipped);
+		upperSpite.setRotation(_angles.top);
+		lowerSprite.setRotation(_angles.bottom);
 	}
 
 	private function idleing() {
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
-		ThirstyArmActions.calcAngles(0, this._idleAnim._, this._isFlipped);
-		upperSpite.setRotation(ThirstyArmActions.upperAngle);
-		lowerSprite.setRotation(ThirstyArmActions.lowerAngle);
+		ArmUtil.calcAngles(0, this._idleAnim._, this._angles, this._isFlipped);
+		upperSpite.setRotation(_angles.top);
+		lowerSprite.setRotation(_angles.bottom);
 	}
 
 	private inline function getAngle(x:Float, y:Float):Float {
@@ -172,13 +155,13 @@ class ThirstyArm extends Component {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //
 			.add(new ImageSprite(pack.getTexture("body/armTop")) //
-				.setAnchor(ThirstyArmActions.UPPERARM_WIDTH / 2, 0));
+				.setAnchor(ArmUtil.UPPERARM_WIDTH / 2, 0));
 		this._lower = new Entity() //
 			.add(new ImageSprite(pack.getTexture("body/armBottom")) //
-				.setXY(ThirstyArmActions.UPPERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_TOP) //
-				.setAnchor(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.ARM_OVERLAP));
+				.setXY(ArmUtil.UPPERARM_WIDTH / 2, ArmUtil.SEGMENT_LENGTH_TOP) //
+				.setAnchor(ArmUtil.LOWERARM_WIDTH / 2, ArmUtil.ARM_OVERLAP));
 
-		this._hand = new Entity().add(new Sprite().setXY(ThirstyArmActions.LOWERARM_WIDTH / 2, ThirstyArmActions.SEGMENT_LENGTH_BOTTOM));
+		this._hand = new Entity().add(new Sprite().setXY(ArmUtil.LOWERARM_WIDTH / 2, ArmUtil.SEGMENT_LENGTH_BOTTOM));
 		this._hand.addChild(new Entity().add(new ImageSprite(pack.getTexture("body/hand")).setAnchor(52, 80)));
 		this._idleAnim.behavior = new Sine(-500, -400, 0.5);
 
@@ -218,6 +201,7 @@ class ThirstyArm extends Component {
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;
 	private var _isDown:Bool = false;
+	private var _angles:{top:Float, bottom:Float} = {top: 0, bottom: 0};
 	private var _idleAnim = new AnimatedFloat(0);
 	private var _disposer:Disposer;
 }
