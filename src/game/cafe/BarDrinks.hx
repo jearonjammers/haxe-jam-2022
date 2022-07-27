@@ -79,14 +79,13 @@ class BarDrink extends Component {
 		if (this.isAvailable && System.pointer.isDown()) {
 			var vX = System.pointer.x;
 			var vY = System.pointer.y;
-			handPos(vX, vY, this._arms.getAngles(true));
+			handPos(vX, vY);
 		}
 	}
 
-	private function handPos(viewX:Float, viewY:Float, angles:{top:Float, bottom:Float}):Bool {
+	private function handPos(viewX:Float, viewY:Float):Bool {
 		var rootSpr = this._root.get(Sprite);
 		var local = rootSpr.localXY(viewX, viewY);
-		_debug.tri(local.x, local.y, angles);
 
 		if (isHit(local.x, local.y)) {
 			// trace("hit");
@@ -113,8 +112,6 @@ class BarDrink extends Component {
 		var anchorY = tex.height - 10;
 		var spr = new ImageSprite(tex).setAnchor(_anchorX, anchorY).setXY(x, y + anchorY / 2);
 		_root.add(spr);
-		this._root.addChild(new Entity().add(this._debug = new DebugSprite()));
-		this._debug.rect(0, 0, tex.width, tex.height);
 	}
 
 	public function show(instant:Bool) {
@@ -152,5 +149,4 @@ class BarDrink extends Component {
 	private var _root:Entity;
 	private var _anchorX:Float;
 	private var _arms:ThirstyArms;
-	private var _debug = new DebugSprite();
 }
