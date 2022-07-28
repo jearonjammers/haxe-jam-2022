@@ -6,7 +6,7 @@
     <sourcePositionVariance x="16.00" y="-16.00"></sourcePositionVariance>
     <speed value="309.24"></speed>
     <speedVariance value="0.00"></speedVariance>
-    <particleLifeSpan value="0.9373"></particleLifeSpan>
+    <particleLifeSpan value="0.5"></particleLifeSpan>
     <particleLifespanVariance value="0.0000"></particleLifespanVariance>
     <angle value="0.00"></angle>
     <angleVariance value="0.00"></angleVariance>
@@ -32,8 +32,8 @@
     <minRadiusVariance value="0.00"></minRadiusVariance>
     <rotatePerSecond value="0.00"></rotatePerSecond>
     <rotatePerSecondVariance value="0.00"></rotatePerSecondVariance>
-    <blendFuncSource value="1"></blendFuncSource>
-    <blendFuncDestination value="1"></blendFuncDestination>
+    <blendFuncSource value="0"></blendFuncSource>
+    <blendFuncDestination value="0"></blendFuncDestination>
     <rotationStart value="0.00"></rotationStart>
     <rotationStartVariance value="0.00"></rotationStartVariance>
     <rotationEnd value="0.00"></rotationEnd>

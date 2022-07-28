@@ -11,7 +11,6 @@ import flambe.animation.Sine;
 import flambe.animation.AnimatedFloat;
 import flambe.Disposer;
 import game.cafe.ThirstyArms;
-import game.cafe.Meter;
 import game.cafe.BarTable;
 import game.cafe.ThirstyPerson;
 import flambe.asset.AssetPack;
@@ -80,8 +79,8 @@ class CafeGame extends Component {
 		_anchorY.behavior = new Sine(5, 0, 3);
 		_isGameplay = true;
 		this._root.get(PlayButton).dispose();
-		this._meterTime.get(Meter).show();
-		this._meterDrink.get(Meter).show();
+		this._meterTime.get(Meter).show(false);
+		this._meterDrink.get(Meter).show(false);
 
 		this._root.add(new Script()).get(Script).run(new Sequence([
 			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),

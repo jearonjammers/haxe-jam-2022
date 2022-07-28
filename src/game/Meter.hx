@@ -1,4 +1,4 @@
-package game.cafe;
+package game;
 
 import flambe.animation.Ease;
 import flambe.math.Rectangle;
@@ -22,8 +22,14 @@ class Meter extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function show() {
-		this._root.get(Sprite).anchorY.animateTo(0, 1, Ease.cubeOut);
+	public function show(instant:Bool):Meter {
+		if(instant) {
+			this._root.get(Sprite).anchorY._ = 0;
+		}
+		else {
+			this._root.get(Sprite).anchorY.animateTo(0, 1, Ease.cubeOut);
+		}
+		return this;
 	}
 
 	public function setFill(percent:Float):Meter {

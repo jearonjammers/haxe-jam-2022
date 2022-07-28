@@ -16,7 +16,7 @@ using flambe.util.Arrays;
 class EmitterSprite extends Sprite
 {
     /** The particle texture, must be square. */
-    public var texture :Texture;
+    public var textures :Array<Texture>;
 
     /** The current number of particles being shown. */
     public var numParticles (default, null) :Int = 0;
@@ -85,7 +85,7 @@ class EmitterSprite extends Sprite
     {
         super();
 
-        texture = mold.texture;
+        textures = mold.textures;
         blendMode = mold.blendMode;
         type = mold.type;
 
@@ -271,7 +271,7 @@ class EmitterSprite extends Sprite
     override public function draw (g :Graphics)
     {
         // Assumes that the texture is always square
-        var offset = -texture.width/2;
+        var offset = -textures[0].width/2;
 
         var ii = 0, ll = numParticles;
         while (ii < ll) {
@@ -287,6 +287,7 @@ class EmitterSprite extends Sprite
             if (particle.scale != 1) {
                 g.scale(particle.scale, particle.scale);
             }
+            var texture = textures[ii % textures.length];
             g.drawTexture(texture, offset, offset);
             g.restore();
 
@@ -329,7 +330,7 @@ class EmitterSprite extends Sprite
         }
 
         // Assumes that the texture is always square
-        var width = texture.width;
+        var width = textures[0].width;
         var scaleStart = random(sizeStart._, sizeStartVariance._) / width;
         var scaleEnd = random(sizeEnd._, sizeEndVariance._) / width;
         particle.scale = scaleStart;
