@@ -1,4 +1,4 @@
-package game;
+package game.cafe;
 
 import flambe.display.Sprite;
 import game.cafe.Bar;
@@ -18,7 +18,7 @@ import flambe.asset.AssetPack;
 import flambe.Entity;
 import flambe.Component;
 
-class Game extends Component {
+class CafeGame extends Component {
 	public function new(pack:AssetPack, width:Int, height:Int) {
 		this.init(pack, width, height);
 	}
@@ -63,8 +63,8 @@ class Game extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._puke = new Puke(pack)) //
-			.add(this._barDrinks = new Bar(pack, this._puke))
+			.add(this._liquid = new Liquid(pack)) //
+			.add(this._barDrinks = new Bar(pack, this._liquid))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
@@ -98,7 +98,7 @@ class Game extends Component {
 	private var _barDrinks:Bar;
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
-	private var _puke:Puke;
+	private var _liquid:Liquid;
 	private var _disposer:Disposer;
 	private var _elapsed = 0.0;
 	private var _isGameplay:Bool = false;

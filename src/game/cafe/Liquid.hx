@@ -1,4 +1,4 @@
-package game;
+package game.cafe;
 
 import flambe.math.FMath;
 import flambe.display.EmitterMold;
@@ -7,7 +7,7 @@ import flambe.asset.AssetPack;
 import flambe.Entity;
 import flambe.Component;
 
-class Puke extends Component {
+class Liquid extends Component {
 	public var visible(get, set):Bool;
 
 	public function new(pack:AssetPack) {

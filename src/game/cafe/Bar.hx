@@ -12,10 +12,10 @@ using game.SpriteUtil;
 
 class Bar extends Component {
 	public var drink:Null<BarDrink> = null;
-	public var puke:Puke;
+	public var liquid:Liquid;
 
-	public function new(pack:AssetPack, puke:Puke) {
-		this.puke = puke;
+	public function new(pack:AssetPack, liquid:Liquid) {
+		this.liquid = liquid;
 		this.init(pack);
 	}
 
@@ -43,13 +43,13 @@ class Bar extends Component {
 								}
 								this.drink = slot;
 								this.drink.grab(point.x, point.y);
-								this.puke.visible = true;
-								this.puke.setXY(point.x, point.y, this.drink.rotation, 230);
+								this.liquid.visible = true;
+								this.liquid.setXY(point.x, point.y, this.drink.rotation, 230);
 							}
 						case Sliding:
 						case Active(ref):
 							slot.moveTo(point.x, point.y);
-							this.puke.setXY(point.x, point.y, this.drink.rotation, 230);
+							this.liquid.setXY(point.x, point.y, this.drink.rotation, 230);
 						case Off:
 					}
 				} else {
@@ -85,7 +85,7 @@ class Bar extends Component {
 		_disposer.add(System.pointer.up.connect(_ -> {
 			if (this.drink != null) {
 				this.drink.toss();
-				this.puke.visible = false;
+				this.liquid.visible = false;
 				this.drink = null;
 			}
 		}));

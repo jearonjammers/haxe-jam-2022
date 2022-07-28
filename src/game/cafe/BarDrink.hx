@@ -53,7 +53,7 @@ class BarDrink extends Component {
 				ref.time += dt;
 				if (ref.time >= ACTIVE_DURATION) {
 					this._bar.drink = null;
-					this._bar.puke.visible = false;
+					this._bar.liquid.visible = false;
 					this.toss();
 				}
 			case Off:

@@ -4,6 +4,7 @@ import flambe.web.WebView;
 import flambe.asset.AssetPack;
 import flambe.asset.Manifest;
 import flambe.System;
+import game.cafe.CafeGame;
 
 class Main {
 	static function main() {
@@ -32,7 +33,7 @@ class Main {
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
 			onGameLoaded(width, height, mainPack);
-			System.root.get(Game).nextState();
+			System.root.get(CafeGame).nextState();
 		}).once();
 	}
 
@@ -60,6 +61,6 @@ class Main {
 	}
 
 	static function onGameLoaded(width:Int, height:Int, pack:AssetPack):Void {
-		System.root.add(new Game(pack, width, height));
+		System.root.add(new CafeGame(pack, width, height));
 	}
 }
