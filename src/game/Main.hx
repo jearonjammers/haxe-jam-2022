@@ -5,6 +5,7 @@ import flambe.asset.AssetPack;
 import flambe.asset.Manifest;
 import flambe.System;
 import game.cafe.CafeGame;
+import game.text.TextGame;
 
 class Main {
 	static function main() {
@@ -22,17 +23,28 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDev.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevText.bind(width, height)).once();
 	}
 
-	static function onDev(width:Int, height:Int, pack:AssetPack):Void {
+	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
 		var loader = new Loader(pack, width, height);
 		System.root.add(loader);
 		System.root.get(Container).visible = true;
 		var main = Manifest.fromAssets("main");
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
-			onGameLoaded(width, height, mainPack);
+			System.root.add(new TextGame(mainPack, width, height));
+		}).once();
+	}
+
+	static function onDevCafe(width:Int, height:Int, pack:AssetPack):Void {
+		var loader = new Loader(pack, width, height);
+		System.root.add(loader);
+		System.root.get(Container).visible = true;
+		var main = Manifest.fromAssets("main");
+		System.loadAssetPack(main).success.connect(mainPack -> {
+			loader.dispose();
+			System.root.add(new CafeGame(mainPack, width, height));
 			System.root.get(CafeGame).nextState();
 		}).once();
 	}
@@ -54,13 +66,9 @@ class Main {
 				var main = Manifest.fromAssets("main");
 				System.loadAssetPack(main).success.connect(mainPack -> {
 					loader.dispose();
-					onGameLoaded(width, height, mainPack);
+					System.root.add(new CafeGame(mainPack, width, height));
 				}).once();
 			}
 		}, {width: width, height: height});
-	}
-
-	static function onGameLoaded(width:Int, height:Int, pack:AssetPack):Void {
-		System.root.add(new CafeGame(pack, width, height));
 	}
 }
