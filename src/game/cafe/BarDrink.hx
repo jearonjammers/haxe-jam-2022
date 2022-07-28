@@ -1,6 +1,6 @@
 package game.cafe;
 
-import flambe.math.Point;
+import flambe.animation.Sine;
 import flambe.util.Value;
 import flambe.script.CallFunction;
 import flambe.script.AnimateTo;
@@ -13,8 +13,6 @@ import flambe.asset.AssetPack;
 import flambe.Entity;
 import flambe.Component;
 
-using game.SpriteUtil;
-
 enum BarDrinkState {
 	Destroyed(ref:{time:Float});
 	Idle;
@@ -26,9 +24,10 @@ enum BarDrinkState {
 class BarDrink extends Component {
 	public var state(default, null):Value<BarDrinkState>;
 
-	public function new(pack:AssetPack, x:Float, y:Float) {
+	public function new(pack:AssetPack, x:Float, y:Float, bar:Bar) {
 		this._x = x;
 		this._y = y;
+		this._bar = bar;
 		this.state = new Value(Off);
 		this.init(pack);
 	}
@@ -39,10 +38,6 @@ class BarDrink extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
-	}
-
-	override function onStart() {
-		this._pSprite = owner.getFromParents(Sprite);
 	}
 
 	override function onUpdate(dt:Float) {
@@ -56,6 +51,7 @@ class BarDrink extends Component {
 			case Active(ref):
 				ref.time += dt;
 				if (ref.time >= ACTIVE_DURATION) {
+					this._bar.drink = null;
 					this.toss();
 				}
 			case Off:
@@ -63,31 +59,7 @@ class BarDrink extends Component {
 		}
 	}
 
-	public function handPos(viewX:Float, viewY:Float):Bool {
-		var rootSpr = this._root.get(Sprite);
-		var point = getXY(viewX, viewY);
-
-		switch this.state._ {
-			case Destroyed(ref):
-			case Idle:
-				if (isHit(point.x, point.y)) {
-					this.grab(point.x, point.y);
-					return true;
-				}
-			case Active(ref):
-				rootSpr.x._ = point.x;
-				rootSpr.y._ = point.y;
-			case Off:
-			case Sliding:
-		}
-		return false;
-	}
-
-	private inline function getXY(viewX:Float, viewY:Float):Point {
-		return this._pSprite.localXY(viewX, viewY);
-	}
-
-	private function isHit(x:Float, y:Float):Bool {
+	public function isHit(x:Float, y:Float):Bool {
 		var rootSpr = this._root.get(Sprite);
 		var x1 = rootSpr.x._ - rootSpr.anchorX._;
 		var y1 = rootSpr.y._ - rootSpr.anchorY._;
@@ -128,6 +100,12 @@ class BarDrink extends Component {
 	public function grab(x:Float, y:Float) {
 		this.state._ = Active({time: 0});
 		var spr = this._root.get(Sprite);
+		spr.rotation.behavior = new Sine(220, 140, 1);
+		this.moveTo(x, y);
+	}
+
+	public function moveTo(x:Float, y:Float) {
+		var spr = this._root.get(Sprite);
 		spr.x._ = x;
 		spr.y._ = y;
 	}
@@ -147,15 +125,15 @@ class BarDrink extends Component {
 		this._root = new Entity();
 		var tex = pack.getTexture("beerStar");
 		var anchorX = tex.width / 2;
-		var anchorY = tex.height - 10;
+		var anchorY = tex.height - 50;
 		_root.add(new ImageSprite(tex).setAnchor(anchorX, anchorY).setXY(_x, _y));
 	}
 
 	private var _root:Entity;
-	private var _pSprite:Sprite;
 	private var _x:Float;
 	private var _y:Float;
+	private var _bar:Bar;
 
 	private static var DESTROYED_DURATION = 2;
-	private static var ACTIVE_DURATION = 2;
+	private static var ACTIVE_DURATION = 4;
 }

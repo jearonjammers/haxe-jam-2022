@@ -5,7 +5,7 @@ import game.cafe.ArmUtil;
 import flambe.System;
 import flambe.display.Sprite;
 import flambe.display.FillSprite;
-import game.cafe.BarDrinks;
+import game.cafe.Bar;
 import flambe.animation.Ease;
 import flambe.script.CallFunction;
 import flambe.script.AnimateTo;
@@ -78,7 +78,7 @@ class Game extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._barDrinks = new BarDrinks(pack))
+			.add(this._barDrinks = new Bar(pack))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
@@ -110,7 +110,7 @@ class Game extends Component {
 	private var _root:Entity;
 	private var _meterTime:Entity;
 	private var _meterDrink:Entity;
-	private var _barDrinks:BarDrinks;
+	private var _barDrinks:Bar;
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
 	private var _disposer:Disposer;

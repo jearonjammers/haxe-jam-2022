@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.display.Sprite;
 import flambe.input.PointerEvent;
 import flambe.Disposer;
 import flambe.System;
@@ -9,7 +10,9 @@ import flambe.Component;
 
 using game.SpriteUtil;
 
-class BarDrinks extends Component {
+class Bar extends Component {
+	public var drink:Null<BarDrink> = null;
+
 	public function new(pack:AssetPack) {
 		this.init(pack);
 	}
@@ -24,7 +27,7 @@ class BarDrinks extends Component {
 	}
 
 	public function init(pack:AssetPack) {
-		this._root = new Entity();
+		this._root = new Entity().add(new Sprite());
 		this._disposer = new Disposer();
 		_slots = [];
 		var offset = 100;
@@ -37,7 +40,7 @@ class BarDrinks extends Component {
 		];
 		for (i in 0...bottlePositions.length) {
 			var pos = bottlePositions[i];
-			var drink = new BarDrink(pack, pos.x, pos.y);
+			var drink = new BarDrink(pack, pos.x, pos.y, this);
 			var e = new Entity().add(drink);
 			drink.turnOff();
 			_slots.push(drink);
@@ -46,14 +49,43 @@ class BarDrinks extends Component {
 
 		function onSlot(e:PointerEvent) {
 			if (System.pointer.isDown()) {
+				var point = this._root.get(Sprite).localXY(System.pointer.x, System.pointer.y);
 				for (slot in _slots) {
-					slot.handPos(e.viewX, e.viewY);
+					var isTouching = slot.isHit(point.x, point.y);
+					if (isTouching) {
+						switch slot.state._ {
+							case Destroyed(ref):
+							case Idle:
+								if (this.drink != slot) {
+									if (this.drink != null) {
+										this.drink.toss();
+									}
+									this.drink = slot;
+									this.drink.grab(point.x, point.y);
+								}
+							case Sliding:
+							case Active(ref):
+								slot.moveTo(point.x, point.y);
+							case Off:
+						}
+					}
+					else {
+						if(this.drink != null) {
+							this.drink.moveTo(point.x, point.y);
+						}
+					}
 				}
 			}
 		}
 
 		_disposer.add(System.pointer.move.connect(onSlot));
 		_disposer.add(System.pointer.down.connect(onSlot));
+		_disposer.add(System.pointer.up.connect(_ -> {
+			if(this.drink != null) {
+				this.drink.toss();
+				this.drink = null;
+			}
+		}));
 
 		_slots[0].show(true);
 		_slots[1].show(true);
@@ -66,4 +98,3 @@ class BarDrinks extends Component {
 	private var _disposer:Disposer;
 	private var _slots:Array<BarDrink>;
 }
-
