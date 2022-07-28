@@ -78,7 +78,7 @@ class Game extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._barDrinks = new BarDrinks(pack, this._thirstyArms))
+			.add(this._barDrinks = new BarDrinks(pack))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
@@ -119,5 +119,4 @@ class Game extends Component {
 	private var _anchorX = new AnimatedFloat(0);
 	private var _anchorY = new AnimatedFloat(0);
 	private var _rotation = new AnimatedFloat(0);
-	// private var _debugA:FillSprite;
 }
