@@ -71,25 +71,9 @@ body {
   overflow: hidden;
 }
 body {
-  background: radial-gradient(
-      circle at 100% 50%,
-      transparent 20%,
-      #00d4f0 21%,
-      #00d4f0 34%,
-      transparent 35%,
-      transparent
-    ),
-    radial-gradient(
-        circle at 0% 50%,
-        transparent 20%,
-        #00d4f0 21%,
-        #00d4f0 34%,
-        transparent 35%,
-        transparent
-      )
-      0 -50px;
-  background-color: #eeeeee;
-  background-size: 75px 100px;
+  background-image: url(/assets/background.png);
+  background-color: #EF9CBD;
+  background-size: 150px 150px;
 }
 .ui {
   position: absolute;
