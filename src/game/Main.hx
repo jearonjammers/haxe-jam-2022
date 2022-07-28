@@ -6,6 +6,7 @@ import flambe.asset.Manifest;
 import flambe.System;
 import game.cafe.CafeGame;
 import game.text.TextGame;
+import game.runner.RunnerGame;
 
 class Main {
 	static function main() {
@@ -23,7 +24,7 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDevText.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevRunner.bind(width, height)).once();
 	}
 
 	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
@@ -34,6 +35,17 @@ class Main {
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
 			System.root.add(new TextGame(mainPack, width, height));
+		}).once();
+	}
+
+	static function onDevRunner(width:Int, height:Int, pack:AssetPack):Void {
+		var loader = new Loader(pack, width, height);
+		System.root.add(loader);
+		System.root.get(Container).visible = true;
+		var main = Manifest.fromAssets("main");
+		System.loadAssetPack(main).success.connect(mainPack -> {
+			loader.dispose();
+			System.root.add(new RunnerGame(mainPack, width, height));
 		}).once();
 	}
 
