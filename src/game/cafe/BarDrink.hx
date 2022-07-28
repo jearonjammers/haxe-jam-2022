@@ -23,6 +23,7 @@ enum BarDrinkState {
 
 class BarDrink extends Component {
 	public var state(default, null):Value<BarDrinkState>;
+	public var rotation(get, null):Float;
 
 	public function new(pack:AssetPack, x:Float, y:Float, bar:Bar) {
 		this._x = x;
@@ -52,6 +53,7 @@ class BarDrink extends Component {
 				ref.time += dt;
 				if (ref.time >= ACTIVE_DURATION) {
 					this._bar.drink = null;
+					this._bar.puke.visible = false;
 					this.toss();
 				}
 			case Off:
@@ -100,7 +102,8 @@ class BarDrink extends Component {
 	public function grab(x:Float, y:Float) {
 		this.state._ = Active({time: 0});
 		var spr = this._root.get(Sprite);
-		spr.rotation.behavior = new Sine(220, 140, 1);
+		var angleDist = 25;
+		spr.rotation.behavior = new Sine(180 + angleDist, 180 - angleDist, 1);
 		this.moveTo(x, y);
 	}
 
@@ -119,6 +122,11 @@ class BarDrink extends Component {
 		spr.x.animateTo(spr.x._ + x, 0.3333, Ease.sineIn);
 		spr.y.animateTo(-300, 0.3333, Ease.sineOut);
 		spr.rotation.animateTo(rotation, 0.3333, Ease.sineOut);
+	}
+
+	private function get_rotation():Float {
+		var spr = this._root.get(Sprite);
+		return spr.rotation._;
 	}
 
 	private function init(pack:AssetPack) {

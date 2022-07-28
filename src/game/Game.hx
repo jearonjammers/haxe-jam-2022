@@ -1,10 +1,6 @@
 package game;
 
-import flambe.math.FMath;
-import game.cafe.ArmUtil;
-import flambe.System;
 import flambe.display.Sprite;
-import flambe.display.FillSprite;
 import game.cafe.Bar;
 import flambe.animation.Ease;
 import flambe.script.CallFunction;
@@ -51,17 +47,6 @@ class Game extends Component {
 				}
 			}
 		}
-		// var lt = _thirstyArms.getForearmAngle(true);
-		// var ld = -_thirstyArms.getForearmDistance(true);
-		// var p = SpriteUtil.localXY(this._root.get(Sprite), System.pointer.x, System.pointer.y);
-		// var angle = FMath.toRadians(lt - 90);
-
-		// var nx = ld * Math.cos(angle) + p.x;
-		// var ny = ld * Math.sin(angle) + p.y;
-
-		// _debugA.x._ = nx;
-		// _debugA.y._ = ny;
-		// _debugA.rotation._ = lt - 180;
 	}
 
 	private function init(pack:AssetPack, width:Int, height:Int) {
@@ -78,12 +63,10 @@ class Game extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._barDrinks = new Bar(pack))
+			.add(this._puke = new Puke(pack)) //
+			.add(this._barDrinks = new Bar(pack, this._puke))
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
-
-		// this._root.addChild(new Entity().add(_debugA = cast new FillSprite(0xff0000, ArmUtil.LOWERARM_WIDTH,
-		// 	ArmUtil.SEGMENT_LENGTH_BOTTOM).setAnchor(ArmUtil.LOWERARM_WIDTH / 2, 0)));
 
 		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
 		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
@@ -93,6 +76,7 @@ class Game extends Component {
 
 	public function nextState() {
 		this._root.get(Background).nextState();
+		// _anchorY.behavior = new Sine(0, 0, 3);
 		_anchorY.behavior = new Sine(5, 0, 3);
 		_isGameplay = true;
 		this._root.get(PlayButton).dispose();
@@ -102,6 +86,7 @@ class Game extends Component {
 		this._root.add(new Script()).get(Script).run(new Sequence([
 			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),
 			new CallFunction(() -> {
+				// _anchorX.behavior = new Sine(0, 0, 2);
 				_anchorX.behavior = new Sine(-200, 200, 2);
 			})
 		]));
@@ -113,6 +98,7 @@ class Game extends Component {
 	private var _barDrinks:Bar;
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
+	private var _puke:Puke;
 	private var _disposer:Disposer;
 	private var _elapsed = 0.0;
 	private var _isGameplay:Bool = false;

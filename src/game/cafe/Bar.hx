@@ -12,8 +12,10 @@ using game.SpriteUtil;
 
 class Bar extends Component {
 	public var drink:Null<BarDrink> = null;
+	public var puke:Puke;
 
-	public function new(pack:AssetPack) {
+	public function new(pack:AssetPack, puke:Puke) {
+		this.puke = puke;
 		this.init(pack);
 	}
 
@@ -24,6 +26,39 @@ class Bar extends Component {
 	override function onRemoved() {
 		owner.removeChild(this._root);
 		this._disposer.dispose();
+	}
+
+	override function onUpdate(dt:Float) {
+		if (System.pointer.isDown()) {
+			var point = this._root.get(Sprite).localXY(System.pointer.x, System.pointer.y);
+			for (slot in _slots) {
+				var isTouching = slot.isHit(point.x, point.y);
+				if (isTouching) {
+					switch slot.state._ {
+						case Destroyed(ref):
+						case Idle:
+							if (this.drink != slot) {
+								if (this.drink != null) {
+									this.drink.toss();
+								}
+								this.drink = slot;
+								this.drink.grab(point.x, point.y);
+								this.puke.visible = true;
+								this.puke.setXY(point.x, point.y, this.drink.rotation, 230);
+							}
+						case Sliding:
+						case Active(ref):
+							slot.moveTo(point.x, point.y);
+							this.puke.setXY(point.x, point.y, this.drink.rotation, 230);
+						case Off:
+					}
+				} else {
+					if (this.drink != null) {
+						this.drink.moveTo(point.x, point.y);
+					}
+				}
+			}
+		}
 	}
 
 	private function init(pack:AssetPack) {
@@ -47,42 +82,10 @@ class Bar extends Component {
 			this._root.addChild(e);
 		}
 
-		function onSlot(e:PointerEvent) {
-			if (System.pointer.isDown()) {
-				var point = this._root.get(Sprite).localXY(System.pointer.x, System.pointer.y);
-				for (slot in _slots) {
-					var isTouching = slot.isHit(point.x, point.y);
-					if (isTouching) {
-						switch slot.state._ {
-							case Destroyed(ref):
-							case Idle:
-								if (this.drink != slot) {
-									if (this.drink != null) {
-										this.drink.toss();
-									}
-									this.drink = slot;
-									this.drink.grab(point.x, point.y);
-								}
-							case Sliding:
-							case Active(ref):
-								slot.moveTo(point.x, point.y);
-							case Off:
-						}
-					}
-					else {
-						if(this.drink != null) {
-							this.drink.moveTo(point.x, point.y);
-						}
-					}
-				}
-			}
-		}
-
-		_disposer.add(System.pointer.move.connect(onSlot));
-		_disposer.add(System.pointer.down.connect(onSlot));
 		_disposer.add(System.pointer.up.connect(_ -> {
-			if(this.drink != null) {
+			if (this.drink != null) {
 				this.drink.toss();
+				this.puke.visible = false;
 				this.drink = null;
 			}
 		}));
