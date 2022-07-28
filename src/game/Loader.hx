@@ -22,7 +22,7 @@ class Loader extends Component {
 		this._disposer.dispose();
 	}
 
-	public function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Int, height:Int) {
 		this._disposer = new Disposer();
 		this._root = new Entity();
 
@@ -48,7 +48,7 @@ class LoaderBall extends Component {
 		this.owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Int, height:Int) {
 		var BALL_X = 898;
 		var BALL_Y = 786;
 		var BALL_X_MOVE = 50;

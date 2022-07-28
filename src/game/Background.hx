@@ -31,7 +31,7 @@ class Background extends Component {
 		this._flamingo.anchorY.animateTo(60, 2, Ease.cubeOut);
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		var CLOUD_X_DIST = 30;
 		var CLOUD_Y_DIST = 15;
 		var CLOUD_TIME = 5;
@@ -88,7 +88,7 @@ class BackgroundSun extends Component {
 		_stripes.rotation._ += dt * 20;
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root.add(new Sprite().setXY(300, 90));
 		this._root.get(Sprite).anchorX.behavior = new Sine(-20, 20, 5);
@@ -123,7 +123,7 @@ class BackgroundSunSmile extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root //
 			.addChild(new Entity().add(new ImageSprite(pack.getTexture("sun/mouthSmile")).setXY(10, 55)));
@@ -148,7 +148,7 @@ class BackgroundSunEye extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack, x:Float, y:Float) {
+	private function init(pack:AssetPack, x:Float, y:Float) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		var eyeTex = pack.getTexture("sun/eye");
 		this._root.addChild(new Entity().add(new FillSprite(0xF4DEC9, eyeTex.width - 4, eyeTex.height - 4).setXY(2, 2)));

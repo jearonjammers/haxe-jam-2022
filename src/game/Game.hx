@@ -64,7 +64,7 @@ class Game extends Component {
 		// _debugA.rotation._ = lt - 180;
 	}
 
-	public function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Int, height:Int) {
 		_anchorX._ = 1900;
 		var METER_Y = 180;
 		this._disposer = new Disposer();

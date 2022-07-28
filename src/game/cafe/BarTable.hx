@@ -18,7 +18,7 @@ class BarTable extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack, height:Int) {
+	private function init(pack:AssetPack, height:Int) {
 		this._root = new Entity();
 		var table = pack.getTexture("table");
 		this._root.addChild(new Entity().add(new ImageSprite(table).setXY(-3, height - table.height)));

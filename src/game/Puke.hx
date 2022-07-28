@@ -4,7 +4,7 @@ import flambe.asset.AssetPack;
 import flambe.Entity;
 import flambe.Component;
 
-class Template extends Component {
+class Puke extends Component {
 	public function new(pack :AssetPack) {
 		this.init(pack);
 	}

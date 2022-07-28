@@ -33,7 +33,7 @@ class Meter extends Component {
 		return this;
 	}
 
-	public function init(pack:AssetPack, x:Float, y:Float, front:String) {
+	private function init(pack:AssetPack, x:Float, y:Float, front:String) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._root.get(Sprite).anchorY._ = 1000;
 

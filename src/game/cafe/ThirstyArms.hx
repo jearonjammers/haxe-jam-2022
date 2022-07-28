@@ -50,7 +50,7 @@ class ThirstyArms extends Component {
 		return this._left.get(ThirstyArm).canReach;
 	}
 
-	public function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
 		var x = 230;
@@ -160,7 +160,7 @@ class ThirstyArm extends Component {
 		lowerSprite.setRotation(_angles.bottom);
 	}
 
-	public function init(pack:AssetPack, x:Float, y:Float) {
+	private function init(pack:AssetPack, x:Float, y:Float) {
 		this._disposer = new Disposer();
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._upper = new Entity() //

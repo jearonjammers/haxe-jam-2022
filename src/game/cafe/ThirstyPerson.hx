@@ -28,7 +28,7 @@ class ThirstyPerson extends Component {
 		this._root.get(Sprite).rotation.bindTo(rotation);
 	}
 
-	public function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Int, height:Int) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, 860));
 
 		this._torso = new Entity().add(new ThirstyPersonTorso(pack));
@@ -57,7 +57,7 @@ class ThirstyPersonHead extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		this._root = new Entity().add(new Sprite());
 		this._head = new Entity().add(new ImageSprite(pack.getTexture("body/head")).setXY(0, -275).centerAnchor());
 		this._root.addChild(this._head);
@@ -83,7 +83,7 @@ class ThirstyPersonTorso extends Component {
 		owner.removeChild(this._root);
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		this._root = new Entity().add(new Sprite());
 		this._torso = new Entity().add(new ImageSprite(pack.getTexture("body/body")).centerAnchor());
 		this._root.addChild(this._torso);

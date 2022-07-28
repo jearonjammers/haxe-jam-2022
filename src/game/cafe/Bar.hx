@@ -26,7 +26,7 @@ class Bar extends Component {
 		this._disposer.dispose();
 	}
 
-	public function init(pack:AssetPack) {
+	private function init(pack:AssetPack) {
 		this._root = new Entity().add(new Sprite());
 		this._disposer = new Disposer();
 		_slots = [];
