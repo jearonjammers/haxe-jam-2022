@@ -1,5 +1,7 @@
 package game.runner;
 
+import game.cafe.CafeGame;
+import flambe.System;
 import flambe.Disposer;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
@@ -43,13 +45,18 @@ class RunnerGame extends Component {
 			.addChild(_sceneryMid = new Entity().add(new Sprite()))
 			.add(_controlDesktop = new ControlDesktop())
 			.add(_person = new Person(pack)) //
-			.addChild(new Entity().add(_homeButton = new Button(pack, "homeButton", width - 121, 90))) //
+			.add(_homeButton = new Button(pack, "homeButton", width - 121, 90)) //
 			.add(new Meter(pack, 1760, METER_Y, "drinkFront").show(true)); //
 
 		_sceneryBack.add(new Bush(pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/bar")).setXY(300, 403)));
 		_disposer = new Disposer();
 		_person.move(Walk);
+
+		_disposer.add(_homeButton.click.connect(() -> {
+			this.dispose();
+			System.root.add(new RunnerGame(pack, width, height));
+		}));
 
 		_disposer.add(_person.hasFallen.connect(() -> {
 			_hasLost = true;

@@ -18,7 +18,7 @@ class ThirstyArms extends Component {
 	public var isAvailable :Bool = true;
 	public var canReach(get, null) : Bool;
 
-	public function new(pack:AssetPack, width:Int, height:Int) {
+	public function new(pack:AssetPack, width:Float, height:Float) {
 		this.init(pack, width, height);
 	}
 
@@ -50,7 +50,7 @@ class ThirstyArms extends Component {
 		return this._left.get(ThirstyArm).canReach;
 	}
 
-	private function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Float, height:Float) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, height - 420));
 
 		var x = 230;

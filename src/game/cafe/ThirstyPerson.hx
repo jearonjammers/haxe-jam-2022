@@ -10,7 +10,7 @@ import flambe.Entity;
 import flambe.Component;
 
 class ThirstyPerson extends Component {
-	public function new(pack:AssetPack, width:Int, height:Int) {
+	public function new(pack:AssetPack, width:Float, height:Float) {
 		this.init(pack, width, height);
 	}
 
@@ -28,7 +28,7 @@ class ThirstyPerson extends Component {
 		this._root.get(Sprite).rotation.bindTo(rotation);
 	}
 
-	private function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Float, height:Float) {
 		this._root = new Entity().add(new Sprite().setXY(width / 2, 860));
 
 		this._torso = new Entity().add(new ThirstyPersonTorso(pack));

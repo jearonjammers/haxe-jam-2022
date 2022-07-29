@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.System;
 import flambe.display.Sprite;
 import game.cafe.Bar;
 import flambe.animation.Ease;
@@ -18,7 +19,7 @@ import flambe.Entity;
 import flambe.Component;
 
 class CafeGame extends Component {
-	public function new(pack:AssetPack, width:Int, height:Int) {
+	public function new(pack:AssetPack, width:Float, height:Float) {
 		this.init(pack, width, height);
 	}
 
@@ -48,7 +49,7 @@ class CafeGame extends Component {
 		}
 	}
 
-	private function init(pack:AssetPack, width:Int, height:Int) {
+	private function init(pack:AssetPack, width:Float, height:Float) {
 		_anchorX._ = 1900;
 		var METER_Y = 180;
 		this._disposer = new Disposer();
@@ -70,6 +71,11 @@ class CafeGame extends Component {
 
 		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
 		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
+
+		_disposer.add(_homeButton.click.connect(() -> {
+			this.dispose();
+			System.root.add(new CafeGame(pack, width, height));
+		}));
 
 		this._disposer.add(_playButton.click.connect(this.nextState).once());
 	}

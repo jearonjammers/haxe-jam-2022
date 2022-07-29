@@ -6,7 +6,7 @@ import flambe.Entity;
 import flambe.Component;
 
 class BarTable extends Component {
-	public function new(pack:AssetPack, height:Int) {
+	public function new(pack:AssetPack, height:Float) {
 		this.init(pack, height);
 	}
 
@@ -18,7 +18,7 @@ class BarTable extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack, height:Int) {
+	private function init(pack:AssetPack, height:Float) {
 		this._root = new Entity();
 		var table = pack.getTexture("table");
 		this._root.addChild(new Entity().add(new ImageSprite(table).setXY(-3, height - table.height)));
