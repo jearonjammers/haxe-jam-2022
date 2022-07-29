@@ -48,7 +48,7 @@ class PersonLeg extends Component {
 	}
 
 	private function setCyclePercent(p:Float) {
-		var JUMP_OFFSET_TOP = -20;
+		var JUMP_OFFSET_TOP = -60;
 
 		var CROUCH_OFFSET_TOP = 60;
 		var CROUCH_OFFSET_BOTTOM = 110;
