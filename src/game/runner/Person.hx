@@ -1,5 +1,6 @@
 package game.runner;
 
+import flambe.display.FillSprite;
 import flambe.animation.Ease;
 import flambe.animation.Sine;
 import flambe.animation.AnimatedFloat;
@@ -31,10 +32,15 @@ class Person extends Component {
 		owner.removeChild(this._root);
 	}
 
+    public function moveTo(x :Float, y :Float) : Void {
+        this._root.get(Sprite).x._ = x;
+        this._root.get(Sprite).y._ = y;
+    }
+
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root //
-			.add(new Sprite().setXY(300, 300)) //
+			.add(new Sprite().setAnchor(0, 180)) //
 			.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/body/shorts")) //
 				.centerAnchor().setXY(0, -5))) //
 			.addChild(new Entity().add(_leg1 = new PersonLeg(pack, false))) //
@@ -51,10 +57,11 @@ class Person extends Component {
 					.add(_head = new ImageSprite(pack.getTexture("runner/body/head")) //
 						.setXY(0, -96) //
 						.setAnchor(63, 148)))); //
-		this.run(0.75);
+		this.run(0.4);
 	}
 
 	private function run(time:Float) {
+		this._root.get(Sprite).anchorY.behavior = new Sine(180, 185, time / 2);
 		_progressLegs.behavior = new Sine(1, -1, time);
 		_bodyPivot.rotation.behavior = new Sine(15, 8, time / 2);
 		_head.rotation.behavior = new Sine(-13, -4, time / 2);
