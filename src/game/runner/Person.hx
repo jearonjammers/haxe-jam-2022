@@ -37,8 +37,8 @@ class Person extends Component {
 					this._anchor.y._ = FLOOR_Y;
 				} else {
 					var jumpProgress = _elapsed / JUMP_DURATION;
-					if (jumpProgress < 0.5) {
-						var p = Ease.sineOut(jumpProgress * 2);
+					if (jumpProgress <= 0.5) {
+						var p = Ease.cubeOut(jumpProgress * 2);
 						var height = p * JUMP_HEIGHT;
 						this._anchor.y._ = FLOOR_Y - height;
 					} else {
@@ -61,7 +61,7 @@ class Person extends Component {
 			_startMult = FMath.clamp(_startMult + dt * 0.5, 0, 1);
 		}
 		if (movetype == Surf) {
-			_balanceMult += dt * 2;
+			_balanceMult += dt * 1.5;
 		} else {
 			_balanceMult *= 0.9;
 		}
