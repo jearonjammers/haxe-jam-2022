@@ -26,7 +26,7 @@ class Person extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
-		if (_hasFallen) {
+		if (_hasFallen || _isSturdy) {
 			return;
 		}
 		_elapsed += dt;
@@ -63,7 +63,7 @@ class Person extends Component {
 		if (movetype == Surf) {
 			_balanceMult += dt * 1.5;
 		} else {
-			_balanceMult *= 0.9;
+			_balanceMult *= 0.98;
 		}
 		_balanceMult = FMath.clamp(_balanceMult, 1, 10);
 		if (_isDown) {
@@ -107,7 +107,7 @@ class Person extends Component {
 	}
 
 	public function move(type:PersonMoveType) {
-		if (movetype == type || _hasFallen) {
+		if (movetype == type || _hasFallen || _isSturdy) {
 			return;
 		}
 		var time = 0.4;
@@ -145,6 +145,13 @@ class Person extends Component {
 		_isDown = false;
 	}
 
+	public inline function sturdy() {
+		_balance = 0;
+		this.move(Walk);
+		handleRotation();
+		_isSturdy = true;
+	}
+
 	private var _legs:PersonLegs;
 	private var _torso:PersonTorso;
 	private var _head:PersonHead;
@@ -159,6 +166,7 @@ class Person extends Component {
 	private var _velo:Float = 0;
 	private var _balanceMult:Float = 1;
 	private var _startMult:Float = 0;
+	private var _isSturdy:Bool = false;
 
 	private static inline var MAX_ANGLE = 80;
 	private static inline var JUMP_DURATION = 1;

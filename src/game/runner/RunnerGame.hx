@@ -14,16 +14,38 @@ import flambe.Component;
 
 class RunnerGame extends Component {
 	public function new(pack:AssetPack, width:Float, height:Float) {
-		this.init(pack, width, height);
+		_pack = pack;
+		this.init(width, height);
 	}
 
 	override function onUpdate(dt:Float) {
-		if (_hasLost) {
+		if (_hasLost || _hasFinishedWalking) {
 			return;
 		}
-		_elapsed += dt;
-		_sceneryBack.get(Sprite).x._ = -_elapsed * 450;
-		_sceneryMid.get(Sprite).x._ = -_elapsed * 450;
+
+		var dp = System.root.get(DrinkPercent);
+		if (dp.percent > 0) {
+			dp.percent -= dt * 0.3;
+			_drinkMeter.setFill(dp.percent);
+		} else if (!_hasWon) {
+			_hasWon = true;
+			handleSuccess();
+		}
+		if (!_hasWon) {
+			_distWorld += dt * 450;
+		} else {
+			_distWorld += dt * 225;
+			_distPerson += dt * 225;
+		}
+
+		if (_distPerson < 690) {
+			_sceneryBack.get(Sprite).x._ = -_distWorld;
+			_sceneryMid.get(Sprite).x._ = -_distWorld;
+			_personSpr.x._ = _distPerson;
+		} else {
+			_hasFinishedWalking = true;
+			this._person.dispose();
+		}
 	}
 
 	override function onAdded() {
@@ -35,7 +57,13 @@ class RunnerGame extends Component {
 		_disposer.dispose();
 	}
 
-	private function init(pack:AssetPack, width:Float, height:Float) {
+	private function handleSuccess() {
+		_person.sturdy();
+		var xpos = -_sceneryMid.get(Sprite).x._ + 1920;
+		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/job")).setXY(xpos, 403)));
+	}
+
+	private function init(width:Float, height:Float) {
 		var METER_Y = 180;
 		this._root = new Entity();
 		this._root //
@@ -43,26 +71,29 @@ class RunnerGame extends Component {
 			.addChild(_sceneryBack = new Entity().add(new Sprite()))
 			.addChild(new Entity().add(new FillSprite(0x0957E9, width, 180).setXY(0, height - 180))) //
 			.addChild(new Entity().add(new FillSprite(0xffffff, width, 6).setXY(0, height - 186))) //
-			.add(new RunnerSun(pack)) //
+			.add(new RunnerSun(_pack)) //
 			.addChild(_sceneryMid = new Entity().add(new Sprite()))
 			.add(_controlDesktop = new ControlDesktop())
-			.add(_person = new Person(pack)) //
-			.add(_homeButton = new Button(pack, "homeButton", width - 121, 90)) //
-			.add(new Meter(pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
+			.addChild(new Entity() //
+				.add(_personSpr = new Sprite()) //
+				.add(_person = new Person(_pack))) //
+			.add(_homeButton = new Button(_pack, "homeButton", width - 121, 90)) //
+			.add(_drinkMeter = new Meter(_pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
 
-		_sceneryBack.add(new Bush(pack, 1400, 729));
-		_sceneryMid.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/bar")).setXY(300, 403)));
+		_sceneryBack.add(new Bush(_pack, 1400, 729));
+		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
 		_disposer = new Disposer();
 		_person.move(Walk);
 
 		_disposer.add(_homeButton.click.connect(() -> {
 			this.dispose();
-			System.root.add(new RunnerGame(pack, width, height));
+			System.root.get(DrinkPercent).reset();
+			System.root.add(new RunnerGame(_pack, width, height));
 		}));
 
 		_disposer.add(_person.hasFallen.connect(() -> {
 			_hasLost = true;
-			var lostSpr = new ImageSprite(pack.getTexture("runner/lost")).centerAnchor().setXY(1920 / 2, 1080);
+			var lostSpr = new ImageSprite(_pack.getTexture("runner/lost")).centerAnchor().setXY(1920 / 2, 1080);
 			lostSpr.y.animateTo(1080 / 2, 0.5, Ease.backOut);
 			lostSpr.rotation.behavior = new Sine(-5, 5, 4);
 			lostSpr.scaleX.behavior = new Sine(0.9, 1, 4);
@@ -117,12 +148,18 @@ class RunnerGame extends Component {
 	}
 
 	private var _root:Entity;
-	private var _elapsed:Float = 0;
+	private var _distWorld:Float = 0;
+	private var _distPerson:Float = 0;
 	private var _hasLost:Bool = false;
+	private var _hasWon:Bool = false;
+	private var _hasFinishedWalking:Bool = false;
+	private var _personSpr:Sprite;
 	private var _person:Person;
 	private var _controlDesktop:ControlDesktop;
 	private var _homeButton:Button;
 	private var _sceneryBack:Entity;
 	private var _sceneryMid:Entity;
+	private var _drinkMeter:Meter;
+	private var _pack:AssetPack;
 	private var _disposer:Disposer;
 }

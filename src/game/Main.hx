@@ -19,12 +19,13 @@ class Main {
 		var container = new Container(width, height);
 		container.visible = false;
 		System.root.add(container);
+		System.root.add(new DrinkPercent());
 		System.stage.resize.connect(() -> {
 			container.setSize(System.stage.width, System.stage.height);
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDevCafe.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevRunner.bind(width, height)).once();
 	}
 
 	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
