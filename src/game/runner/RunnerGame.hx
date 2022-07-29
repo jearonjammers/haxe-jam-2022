@@ -29,6 +29,7 @@ class RunnerGame extends Component {
 			return;
 		}
 
+		return;
 		var dp = System.root.get(DrinkPercent);
 		if (dp.percent > 0) {
 			dp.percent -= dt * 0.03;
@@ -120,6 +121,7 @@ class RunnerGame extends Component {
 
 		_sceneryBack.add(new Bush(_pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
+		_sceneryMid.addChild(new Entity().add(new EnemyWorm(_pack, 1400, 985)));
 		_disposer = new Disposer();
 		_person.move(Walk);
 
