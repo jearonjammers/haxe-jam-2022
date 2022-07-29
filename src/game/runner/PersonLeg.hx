@@ -47,11 +47,10 @@ class PersonLeg extends Component {
 		return p * scale + r;
 	}
 
-	private function setCyclePercent(val:Float) {
-		var p = val >= 0 ? Ease.linear(val) : -Ease.sineOut(Math.abs(val));
+	private function setCyclePercent(p:Float) {
 		_topPivot.rotation._ = switch [p >= 0, _type] {
 			case [true, Idle]: 0;
-			case [true, Crouch]: p * -90;
+			case [true, Crouch]: p * -80;
 			case [true, Walk]: p * -60;
 			case [true, Surf]: 0;
 			//
@@ -62,12 +61,12 @@ class PersonLeg extends Component {
 		}
 		_bottom.rotation._ = switch [p >= 0, _type] {
 			case [true, Idle]: 0;
-			case [true, Crouch]: p * 60;
+			case [true, Crouch]: (1 - p) * 170;
 			case [true, Walk]: p * 60;
 			case [true, Surf]: 0;
 			//
 			case [false, Idle]: 0;
-			case [false, Crouch]: p * -10;
+			case [false, Crouch]: (1 - p) * 60;
 			case [false, Walk]: p * -10;
 			case [false, Surf]: 0;
 		}
