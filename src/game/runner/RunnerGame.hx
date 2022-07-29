@@ -1,5 +1,10 @@
 package game.runner;
 
+import game.score.ScoreGame;
+import flambe.script.CallFunction;
+import flambe.script.Delay;
+import flambe.script.Sequence;
+import flambe.script.Script;
 import flambe.animation.Sine;
 import flambe.animation.Ease;
 import game.cafe.CafeGame;
@@ -45,6 +50,13 @@ class RunnerGame extends Component {
 		} else {
 			_hasFinishedWalking = true;
 			this._person.dispose();
+			this._root.add(new Script()).get(Script).run(new Sequence([
+				new Delay(1),
+				new CallFunction(() -> {
+					this.dispose();
+					System.root.add(new ScoreGame(_pack, 1920, 1080));
+				})
+			]));
 		}
 	}
 

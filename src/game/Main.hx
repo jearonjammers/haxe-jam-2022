@@ -1,5 +1,6 @@
 package game;
 
+import game.score.ScoreGame;
 import flambe.web.WebView;
 import flambe.asset.AssetPack;
 import flambe.asset.Manifest;
@@ -25,7 +26,7 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDevRunner.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevScore.bind(width, height)).once();
 	}
 
 	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
@@ -36,6 +37,17 @@ class Main {
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
 			System.root.add(new TextGame(mainPack, width, height));
+		}).once();
+	}
+
+	static function onDevScore(width:Int, height:Int, pack:AssetPack):Void {
+		var loader = new Loader(pack, width, height);
+		System.root.add(loader);
+		System.root.get(Container).visible = true;
+		var main = Manifest.fromAssets("main");
+		System.loadAssetPack(main).success.connect(mainPack -> {
+			loader.dispose();
+			System.root.add(new ScoreGame(mainPack, width, height));
 		}).once();
 	}
 
