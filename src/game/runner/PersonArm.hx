@@ -33,32 +33,39 @@ class PersonArm extends Component {
 		_progress.behavior = _isFront ? new Sine(1, -1, time) : new Sine(-1, 1, time);
 	}
 
-	private function setCyclePercent(val:Float) {
-		switch this._type {
-			case Idle:
-				_topPivot.rotation._ = 0;
-				_bottom.rotation._ = 0;
-				_hand.rotation._ = 0;
-			case Crouch:
-			case Walk:
-				if (val >= 0) {
-					var p = Ease.linear(val);
-					var rotationTop = p * 60;
-					_topPivot.rotation._ = -rotationTop;
-					var rotationBottom = p * 60;
-					_bottom.rotation._ = -rotationBottom;
-					var hand = p * 0;
-					_hand.rotation._ = hand;
-				} else {
-					var p = -Ease.sineOut(Math.abs(val));
-					var rotationTop = p * 50;
-					_topPivot.rotation._ = -rotationTop;
-					var rotationBottom = p * 50;
-					_bottom.rotation._ = rotationBottom;
-					var hand = p * 20;
-					_hand.rotation._ = -hand;
-				}
-			case Surf:
+	private function setCyclePercent(p:Float) {
+		_topPivot.rotation._ = switch [p >= 0, _type] {
+			case [true, Jump]: 0;
+			case [true, Crouch]: p * -10 - 90;
+			case [true, Walk]: p * -60;
+			case [true, Surf]: 0;
+			//
+			case [false, Jump]: 0;
+			case [false, Crouch]: p * -10 - 90;
+			case [false, Walk]: p * -50;
+			case [false, Surf]: 0;
+		}
+		_bottom.rotation._ = switch [p >= 0, _type] {
+			case [true, Jump]: 0;
+			case [true, Crouch]: p * -70;
+			case [true, Walk]: p * -60;
+			case [true, Surf]: 0;
+			//
+			case [false, Jump]: 0;
+			case [false, Crouch]: p * 20;
+			case [false, Walk]: p * 50;
+			case [false, Surf]: 0;
+		}
+		_hand.rotation._ = switch [p >= 0, _type] {
+			case [true, Jump]: 0;
+			case [true, Crouch]: 0;
+			case [true, Walk]: 0;
+			case [true, Surf]: 0;
+			//
+			case [false, Jump]: 0;
+			case [false, Crouch]: p * 70;
+			case [false, Walk]: p * -20;
+			case [false, Surf]: 0;
 		}
 	}
 
@@ -84,6 +91,6 @@ class PersonArm extends Component {
 	private var _bottom:Sprite;
 	private var _hand:Sprite;
 	private var _isFront:Bool;
-	private var _type:PersonMoveType = Idle;
+	private var _type:PersonMoveType = Walk;
 	private var _progress = new AnimatedFloat(0);
 }

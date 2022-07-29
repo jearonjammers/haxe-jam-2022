@@ -29,9 +29,10 @@ class PersonHead extends Component {
 
 	public function move(type:PersonMoveType, time:Float) {
 		switch type {
-			case Idle:
+			case Jump:
 			case Crouch:
-			case Walk:
+				_root.get(Sprite).rotation.behavior = new Sine(-34, -4, time / 2);
+				case Walk:
 				_root.get(Sprite).rotation.behavior = new Sine(-13, -4, time / 2);
 			case Surf:
 		}

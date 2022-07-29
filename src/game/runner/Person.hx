@@ -30,21 +30,22 @@ class Person extends Component {
 					.add(_upperPivot = new Sprite()) //
 					.add(_torso = new PersonTorso(pack, 0, 0)) //
 					.add(_head = new PersonHead(pack))));
-		this.move(Walk, 2);
+		this.move(Crouch, 0.4);
 	}
 
 	public function move(type:PersonMoveType, time:Float) {
 		switch type {
-			case Idle:
+			case Jump:
 			case Crouch:
-				// _lowerPivot.anchorY.behavior = new Sine(-45, -75, time / 2);
-				// _upperPivot.rotation.behavior = new Sine(15, 8, time / 2);
+				var offsetY = -26;
+				_lowerPivot.anchorY.behavior = new Sine(0 + offsetY, 5 + offsetY, time / 2);
+				_upperPivot.rotation.behavior = new Sine(45, 20, time / 2);
 			case Walk:
 				_lowerPivot.anchorY.behavior = new Sine(0, 5, time / 2);
 				_upperPivot.rotation.behavior = new Sine(15, 8, time / 2);
 			case Surf:
 		}
-		// _head.move(type, time);
+		_head.move(type, time);
 		_legs.move(type, time);
 		_torso.move(type, time);
 	}
