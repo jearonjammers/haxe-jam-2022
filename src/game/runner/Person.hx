@@ -7,6 +7,8 @@ import flambe.Entity;
 import flambe.Component;
 
 class Person extends Component {
+	public var movetype:PersonMoveType = PersonMoveType.Walk;
+
 	public function new(pack:AssetPack) {
 		this.init(pack);
 	}
@@ -19,10 +21,21 @@ class Person extends Component {
 		owner.removeChild(this._root);
 	}
 
+	override function onUpdate(dt:Float) {
+		_elapsed += dt;
+		switch movetype {
+			case Jump, Surf:
+				if (_elapsed >= 1) {
+					this.move(Walk);
+				}
+			case _:
+		}
+	}
+
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root //
-			.add(new Sprite().setXY(620, 900).setAnchor(0, 180)) //
+			.add(new Sprite().setXY(620, 980).setAnchor(0, 180)) //
 			.addChild(new Entity() //
 				.add(_lowerPivot = new Sprite()) //
 				.add(_legs = new PersonLegs(pack, 0, 0)) //
@@ -30,10 +43,12 @@ class Person extends Component {
 					.add(_upperPivot = new Sprite()) //
 					.add(_torso = new PersonTorso(pack, 0, 0)) //
 					.add(_head = new PersonHead(pack))));
-		this.move(Jump, 0.4);
 	}
 
-	public function move(type:PersonMoveType, time:Float) {
+	public function move(type:PersonMoveType) {
+		var time = 0.4;
+		movetype = type;
+		_elapsed = 0;
 		switch type {
 			case Jump:
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time);
@@ -60,4 +75,5 @@ class Person extends Component {
 	private var _root:Entity;
 	private var _lowerPivot:Sprite;
 	private var _upperPivot:Sprite;
+	private var _elapsed:Float = 0;
 }

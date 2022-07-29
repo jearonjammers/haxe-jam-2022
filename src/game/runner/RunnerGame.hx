@@ -1,9 +1,8 @@
 package game.runner;
 
+import flambe.Disposer;
 import flambe.display.ImageSprite;
 import flambe.display.Sprite;
-import flambe.animation.Sine;
-import flambe.animation.AnimatedFloat;
 import flambe.display.FillSprite;
 import flambe.asset.AssetPack;
 import flambe.Entity;
@@ -15,10 +14,9 @@ class RunnerGame extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
-		this._move.update(dt);
-		// this._root.get(Person).moveTo(this._move._, 980);
-		_sceneryBack.get(Sprite).x._ = -this._move._;
-		_sceneryMid.get(Sprite).x._ = -this._move._;
+		_elapsed += dt;
+		_sceneryBack.get(Sprite).x._ = -_elapsed * 450;
+		_sceneryMid.get(Sprite).x._ = -_elapsed * 450;
 	}
 
 	override function onAdded() {
@@ -27,6 +25,7 @@ class RunnerGame extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
+		_disposer.dispose();
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
@@ -39,19 +38,53 @@ class RunnerGame extends Component {
 			.addChild(new Entity().add(new FillSprite(0xffffff, width, 6).setXY(0, height - 186))) //
 			.add(new RunnerSun(pack)) //
 			.addChild(_sceneryMid = new Entity().add(new Sprite()))
-			.add(new Person(pack)) //
+			.add(_controlDesktop = new ControlDesktop())
+			.add(_person = new Person(pack)) //
 			.addChild(new Entity().add(_homeButton = new Button(pack, "homeButton", width - 121, 90))) //
 			.add(new Meter(pack, 1760, METER_Y, "drinkFront").show(true)); //
-		this._move = new AnimatedFloat(0);
-		this._move.behavior = new Sine(300, 800, 2);
 
 		_sceneryBack.add(new Bush(pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/bar")).setXY(300, 403)));
+		_disposer = new Disposer();
+		_person.move(Walk);
+
+		_disposer.add(_controlDesktop.state.changed.connect((s, _) -> {
+			switch [s, _person.movetype] {
+				// request jump
+				case [Up, Jump]: // ignore if in jump state
+				case [Up, Surf]: // ignore if in surf state
+				case [Up, _]:
+					_person.move(Jump);
+				// request surf
+				case [Right, Jump]: // ignore if in jump state
+				case [Right, Surf]: // ignore if in surf state
+				case [Right, _]:
+					_person.move(Surf);
+				// request crouch
+				case [Down, Jump]: // ignore if in jump state
+				case [Down, Surf]: // ignore if in surf state
+				case [Down, _]:
+					_person.move(Crouch);
+				// request walk lean forward
+				case [Space, Jump]: // ignore if in jump state
+				case [Space, Surf]: // ignore if in surf state
+				case [Space, _]:
+					_person.move(Walk);
+				// request walk lean backwards
+				case [Idle, Jump]: // ignore if in jump state
+				case [Idle, Surf]: // ignore if in surf state
+				case [Idle, _]:
+					_person.move(Walk);
+			}
+		}));
 	}
 
 	private var _root:Entity;
-	private var _move:AnimatedFloat;
+	private var _elapsed:Float = 0;
+	private var _person:Person;
+	private var _controlDesktop:ControlDesktop;
 	private var _homeButton:Button;
 	private var _sceneryBack:Entity;
 	private var _sceneryMid:Entity;
+	private var _disposer:Disposer;
 }
