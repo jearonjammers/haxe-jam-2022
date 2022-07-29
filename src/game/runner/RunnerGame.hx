@@ -1,5 +1,6 @@
 package game.runner;
 
+import game.cafe.CafeSun;
 import game.score.ScoreGame;
 import flambe.script.CallFunction;
 import flambe.script.Delay;
@@ -76,6 +77,8 @@ class RunnerGame extends Component {
 
 	private function handleSuccess() {
 		_person.sturdy();
+		_sun.owner.add(new CafeSun(_pack, 440, 90));
+		_sun.dispose();
 		var xpos = -_sceneryMid.get(Sprite).x._ + 1920;
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/job")).setXY(xpos, 403)));
 	}
@@ -99,7 +102,8 @@ class RunnerGame extends Component {
 				.setRotation(180) //
 				.setXY(1400, 130) //
 				.centerAnchor())) //
-			.add(new RunnerSun(_pack)) //
+			.addChild(new Entity() //
+				.add(_sun = new RunnerSun(_pack, 440, 90))) //
 			.addChild(_sceneryMid = new Entity().add(new Sprite()))
 			.add(_controlDesktop = new ControlDesktop())
 			.addChild(new Entity() //
@@ -192,6 +196,7 @@ class RunnerGame extends Component {
 	private var _personSpr:Sprite;
 	private var _cloud1:Sprite;
 	private var _cloud2:Sprite;
+	private var _sun:RunnerSun;
 	private var _person:Person;
 	private var _controlDesktop:ControlDesktop;
 	private var _homeButton:Button;
