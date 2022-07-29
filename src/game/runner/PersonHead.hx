@@ -31,11 +31,13 @@ class PersonHead extends Component {
 		switch type {
 			case Jump:
 				_root.get(Sprite).rotation.behavior = new Sine(-40, -30, time * 2);
-				case Crouch:
+			case Crouch:
 				_root.get(Sprite).rotation.behavior = new Sine(-34, -4, time / 2);
-				case Walk:
+			case Walk:
 				_root.get(Sprite).rotation.behavior = new Sine(-13, -4, time / 2);
 			case Surf:
+				_root.get(Sprite).rotation.behavior = new Sine(4, -4, time);
+			case Idle:
 				_root.get(Sprite).rotation.behavior = new Sine(4, -4, time);
 		}
 	}

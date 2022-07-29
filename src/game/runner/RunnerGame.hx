@@ -14,6 +14,9 @@ class RunnerGame extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
+		if (_hasLost) {
+			return;
+		}
 		_elapsed += dt;
 		_sceneryBack.get(Sprite).x._ = -_elapsed * 450;
 		_sceneryMid.get(Sprite).x._ = -_elapsed * 450;
@@ -48,39 +51,59 @@ class RunnerGame extends Component {
 		_disposer = new Disposer();
 		_person.move(Walk);
 
+		_disposer.add(_person.hasFallen.connect(() -> {
+			_hasLost = true;
+		}));
+
 		_disposer.add(_controlDesktop.state.changed.connect((s, _) -> {
 			switch [s, _person.movetype] {
 				// request jump
 				case [Up, Jump]: // ignore if in jump state
 				case [Up, Surf]: // ignore if in surf state
+				case [Up, Crouch]: // ignore if in crouch state
 				case [Up, _]:
 					_person.move(Jump);
 				// request surf
 				case [Right, Jump]: // ignore if in jump state
 				case [Right, Surf]: // ignore if in surf state
+				case [Right, Crouch]: // ignore if in crouch state
 				case [Right, _]:
 					_person.move(Surf);
 				// request crouch
 				case [Down, Jump]: // ignore if in jump state
 				case [Down, Surf]: // ignore if in surf state
+				case [Down, Crouch]: // ignore if in crouch state
 				case [Down, _]:
 					_person.move(Crouch);
 				// request walk lean forward
 				case [Space, Jump]: // ignore if in jump state
 				case [Space, Surf]: // ignore if in surf state
+				case [Space, Crouch]: // ignore if in crouch state
 				case [Space, _]:
 					_person.move(Walk);
 				// request walk lean backwards
 				case [Idle, Jump]: // ignore if in jump state
 				case [Idle, Surf]: // ignore if in surf state
+				case [Idle, Crouch]: // ignore if in crouch state
 				case [Idle, _]:
 					_person.move(Walk);
+			}
+
+			switch [s] {
+				// request walk lean forward
+				case [Space]: // ignore if in jump state
+					_person.press();
+				// request walk lean backwards
+				case [Idle]: // ignore if in jump state
+					_person.lift();
+				case _:
 			}
 		}));
 	}
 
 	private var _root:Entity;
 	private var _elapsed:Float = 0;
+	private var _hasLost:Bool = false;
 	private var _person:Person;
 	private var _controlDesktop:ControlDesktop;
 	private var _homeButton:Button;

@@ -28,6 +28,11 @@ class PersonLegs extends Component {
 			.addChild(new Entity().add(_leg2 = new PersonLeg(pack, true)));
 	}
 
+	public function setBalance(balance:Float):Void {
+		this._leg1.setBalance(balance);
+		this._leg2.setBalance(balance);
+	}
+
 	public function move(type:PersonMoveType, time:Float) {
 		_leg1.move(type, time);
 		_leg2.move(type, time);
