@@ -30,7 +30,7 @@ class RunnerGame extends Component {
 
 		var dp = System.root.get(DrinkPercent);
 		if (dp.percent > 0) {
-			dp.percent -= dt * 0.3;
+			dp.percent -= dt * 0.03;
 			_drinkMeter.setFill(dp.percent);
 		} else if (!_hasWon) {
 			_hasWon = true;
@@ -42,6 +42,11 @@ class RunnerGame extends Component {
 			_distWorld += dt * 225;
 			_distPerson += dt * 225;
 		}
+
+		_bg.setPercent(dp.percent);
+		_floor.setPercent(dp.percent);
+		_cloud1.rotation._ = 180 * Ease.sineOut(dp.percent);
+		_cloud2.rotation._ = 180 * dp.percent;
 
 		if (_distPerson < 690) {
 			_sceneryBack.get(Sprite).x._ = -_distWorld;
@@ -77,12 +82,23 @@ class RunnerGame extends Component {
 
 	private function init(width:Float, height:Float) {
 		var METER_Y = 180;
+		_bg = new RGBSprite(235, 59, 36, 172, 221, 229, width, height);
+		_floor = new RGBSprite(9, 87, 233, 204, 204, 204, width, height);
 		this._root = new Entity();
 		this._root //
-			.add(new FillSprite(0xEB3B24, width, height)) //
+			.add(_bg) //
 			.addChild(_sceneryBack = new Entity().add(new Sprite()))
-			.addChild(new Entity().add(new FillSprite(0x0957E9, width, 180).setXY(0, height - 180))) //
+			.addChild(new Entity().add(_floor.setXY(0, height - 180))) //
 			.addChild(new Entity().add(new FillSprite(0xffffff, width, 6).setXY(0, height - 186))) //
+			.addChild(new Entity().add(_cloud1 = new ImageSprite(_pack.getTexture("cloud")) //
+				.setRotation(180) //
+				.setScale(0.7) //
+				.setXY(1000, 280) //
+				.centerAnchor())) //
+			.addChild(new Entity().add(_cloud2 = new ImageSprite(_pack.getTexture("cloud")) //
+				.setRotation(180) //
+				.setXY(1400, 130) //
+				.centerAnchor())) //
 			.add(new RunnerSun(_pack)) //
 			.addChild(_sceneryMid = new Entity().add(new Sprite()))
 			.add(_controlDesktop = new ControlDesktop())
@@ -91,6 +107,12 @@ class RunnerGame extends Component {
 				.add(_person = new Person(_pack))) //
 			.add(_homeButton = new Button(_pack, "homeButton", width - 121, 90)) //
 			.add(_drinkMeter = new Meter(_pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
+
+		_cloud1.x.behavior = new Sine(970, 1030, 4);
+		_cloud1.y.behavior = new Sine(280, 250, 8);
+
+		_cloud2.x.behavior = new Sine(1370, 1430, 4.5);
+		_cloud2.y.behavior = new Sine(130, 100, 8.5);
 
 		_sceneryBack.add(new Bush(_pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
@@ -160,12 +182,16 @@ class RunnerGame extends Component {
 	}
 
 	private var _root:Entity;
+	private var _bg:RGBSprite;
+	private var _floor:RGBSprite;
 	private var _distWorld:Float = 0;
 	private var _distPerson:Float = 0;
 	private var _hasLost:Bool = false;
 	private var _hasWon:Bool = false;
 	private var _hasFinishedWalking:Bool = false;
 	private var _personSpr:Sprite;
+	private var _cloud1:Sprite;
+	private var _cloud2:Sprite;
 	private var _person:Person;
 	private var _controlDesktop:ControlDesktop;
 	private var _homeButton:Button;
