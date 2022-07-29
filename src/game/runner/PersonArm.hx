@@ -35,26 +35,26 @@ class PersonArm extends Component {
 
 	private function setCyclePercent(p:Float) {
 		_topPivot.rotation._ = switch [p >= 0, _type] {
-			case [true, Jump]: 0;
+			case [true, Jump]: -120 + (_isFront ? p * -5 : p * -5);
 			case [true, Crouch]: p * -10 - 90;
 			case [true, Walk]: p * -60;
-			case [true, Surf]: 0;
+			case [true, Surf]: _isFront ? p * -5 - 80 : p * -5 + 80;
 			//
-			case [false, Jump]: 0;
+			case [false, Jump]: -120 + (_isFront ? p * -5 : p * -5);
 			case [false, Crouch]: p * -10 - 90;
 			case [false, Walk]: p * -50;
-			case [false, Surf]: 0;
+			case [false, Surf]: _isFront ? p * -5 - 80 : p * -5 + 80;
 		}
 		_bottom.rotation._ = switch [p >= 0, _type] {
 			case [true, Jump]: 0;
 			case [true, Crouch]: p * -70;
 			case [true, Walk]: p * -60;
-			case [true, Surf]: 0;
+			case [true, Surf]: p * -10;
 			//
 			case [false, Jump]: 0;
 			case [false, Crouch]: p * 20;
 			case [false, Walk]: p * 50;
-			case [false, Surf]: 0;
+			case [false, Surf]: p * 10;
 		}
 		_hand.rotation._ = switch [p >= 0, _type] {
 			case [true, Jump]: 0;
@@ -65,7 +65,7 @@ class PersonArm extends Component {
 			case [false, Jump]: 0;
 			case [false, Crouch]: p * 70;
 			case [false, Walk]: p * -20;
-			case [false, Surf]: 0;
+			case [false, Surf]: p * 10;
 		}
 	}
 

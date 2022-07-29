@@ -31,7 +31,7 @@ class PersonLeg extends Component {
 		this._type = type;
 		switch type {
 			case Jump:
-				_progress.behavior = new Sine(0, 0, time);
+				_progress.behavior = _isFront ? new Sine(1, -1, time) : new Sine(-1, 1, time);
 			case Crouch:
 				_progress.behavior = _isFront ? new Sine(1, -1, time) : new Sine(-1, 1, time);
 			case Walk:
@@ -42,27 +42,29 @@ class PersonLeg extends Component {
 	}
 
 	private function setCyclePercent(p:Float) {
+		var JUMP_OFFSET_TOP = -20;
+
 		var CROUCH_OFFSET_TOP = 60;
 		var CROUCH_OFFSET_BOTTOM = 110;
-		var SHOE_OFFSET = -40;
+		var SHOE_OFFSET = -48;
 		_topPivot.rotation._ = switch [p >= 0, _type] {
-			case [true, Jump]: 0;
+			case [true, Jump]: _isFront ? p * -10 - JUMP_OFFSET_TOP : p * -10 - JUMP_OFFSET_TOP;
 			case [true, Crouch]: p * -60 - CROUCH_OFFSET_TOP;
 			case [true, Walk]: p * -60;
-			case [true, Surf]: 0;
+			case [true, Surf]: _isFront ? -20 : 20;
 			//
-			case [false, Jump]: 0;
+			case [false, Jump]: _isFront ? p * -10 - JUMP_OFFSET_TOP : p * -10 - JUMP_OFFSET_TOP;
 			case [false, Crouch]: p * -10 - CROUCH_OFFSET_TOP;
 			case [false, Walk]: p * -10;
-			case [false, Surf]: 0;
+			case [false, Surf]: _isFront ? -20 : 20;
 		}
 		_bottom.rotation._ = switch [p >= 0, _type] {
-			case [true, Jump]: 0;
+			case [true, Jump]: p * 10;
 			case [true, Crouch]: p * 60 + CROUCH_OFFSET_BOTTOM;
 			case [true, Walk]: p * 60;
 			case [true, Surf]: 0;
 			//
-			case [false, Jump]: 0;
+			case [false, Jump]: p * -5;
 			case [false, Crouch]: p * -10 + CROUCH_OFFSET_BOTTOM;
 			case [false, Walk]: p * -10;
 			case [false, Surf]: 0;
@@ -71,12 +73,12 @@ class PersonLeg extends Component {
 			case [true, Jump]: 0;
 			case [true, Crouch]: p * 5 + SHOE_OFFSET;
 			case [true, Walk]: p * 5;
-			case [true, Surf]: 0;
+			case [true, Surf]: _isFront ? 20 : -20;
 			//
 			case [false, Jump]: 0;
 			case [false, Crouch]: p * 15 + SHOE_OFFSET;
 			case [false, Walk]: p * 15;
-			case [false, Surf]: 0;
+			case [false, Surf]: _isFront ? 20 : -20;
 		}
 	}
 
@@ -91,7 +93,7 @@ class PersonLeg extends Component {
 				.addChild(new Entity() //
 					.add(_foot = new ImageSprite(pack.getTexture("runner/body/shoe")) //
 						.setAnchor(8, 5) //
-						.setXY(2, 104)))) //
+						.setXY(2, 110)))) //
 			.addChild(new Entity() //
 				.add(_top = new ImageSprite(pack.getTexture(texName)) //
 					.setAnchor(14, 15))); //
