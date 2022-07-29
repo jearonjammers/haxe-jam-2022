@@ -58,19 +58,20 @@ class CafeGame extends Component {
 		this._root //
 			.add(new Sprite())
 			.add(new Background(pack)) //
-			.add(new PlayButton(pack)) //
+			.addChild(new Entity().add(_playButton = new Button(pack, "playButton", width / 2, 780))) //
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
 			.add(this._liquid = new Liquid(pack)) //
 			.add(this._barDrinks = new Bar(pack, this._liquid))
+			.addChild(new Entity().add(_homeButton = new Button(pack, "homeButton", width - 121, 90))) //
 			.addChild(this._meterTime) //
 			.addChild(this._meterDrink); //
 
 		this._thirstyPerson.bindTo(_anchorX, _anchorY, _rotation);
 		this._thirstyArms.bindTo(_anchorX, _anchorY, _rotation);
 
-		this._disposer.add(this._root.get(PlayButton).click.connect(this.nextState).once());
+		this._disposer.add(_playButton.click.connect(this.nextState).once());
 	}
 
 	public function nextState() {
@@ -78,7 +79,7 @@ class CafeGame extends Component {
 		// _anchorY.behavior = new Sine(0, 0, 3);
 		_anchorY.behavior = new Sine(5, 0, 3);
 		_isGameplay = true;
-		this._root.get(PlayButton).dispose();
+		_playButton.dispose();
 		this._meterTime.get(Meter).show(false);
 		this._meterDrink.get(Meter).show(false);
 
@@ -95,6 +96,8 @@ class CafeGame extends Component {
 	private var _meterTime:Entity;
 	private var _meterDrink:Entity;
 	private var _barDrinks:Bar;
+	private var _playButton:Button;
+	private var _homeButton:Button;
 	private var _thirstyPerson:ThirstyPerson;
 	private var _thirstyArms:ThirstyArms;
 	private var _liquid:Liquid;

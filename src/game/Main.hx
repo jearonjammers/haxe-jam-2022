@@ -57,7 +57,6 @@ class Main {
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
 			System.root.add(new CafeGame(mainPack, width, height));
-			System.root.get(CafeGame).nextState();
 		}).once();
 	}
 
