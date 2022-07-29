@@ -3,7 +3,7 @@ package game.score;
 import flambe.display.Sprite;
 import flambe.animation.Sine;
 import flambe.animation.Ease;
-import game.runner.RunnerGame;
+import game.cafe.CafeGame;
 import flambe.System;
 import flambe.display.ImageSprite;
 import flambe.display.FillSprite;
@@ -61,7 +61,7 @@ class ScoreGame extends Component {
 		_homeButton.click.connect(() -> {
 			this.dispose();
 			System.root.get(DrinkPercent).reset();
-			System.root.add(new RunnerGame(pack, width, height));
+			System.root.add(new CafeGame(pack, width, height));
 		}).once();
 	}
 

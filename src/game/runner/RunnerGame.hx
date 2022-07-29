@@ -100,7 +100,7 @@ class RunnerGame extends Component {
 		_disposer.add(_homeButton.click.connect(() -> {
 			this.dispose();
 			System.root.get(DrinkPercent).reset();
-			System.root.add(new RunnerGame(_pack, width, height));
+			System.root.add(new CafeGame(_pack, width, height));
 		}));
 
 		_disposer.add(_person.hasFallen.connect(() -> {
