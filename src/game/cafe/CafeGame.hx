@@ -54,12 +54,12 @@ class CafeGame extends Component {
 		var METER_Y = 180;
 		this._disposer = new Disposer();
 		this._root = new Entity();
-		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront").setFill(0.4));
-		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront"));
+		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront", "timeMid").setFill(0.4));
+		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront", "drinkMid"));
 		this._root //
 			.add(new Sprite())
 			.add(new Background(pack)) //
-			.addChild(new Entity().add(_playButton = new Button(pack, "playButton", width / 2, 780))) //
+			.addChild(new Entity().add(_playButton = new Button(pack, "cafe/playButton", width / 2, 780))) //
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //

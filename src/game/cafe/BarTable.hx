@@ -20,7 +20,7 @@ class BarTable extends Component {
 
 	private function init(pack:AssetPack, height:Float) {
 		this._root = new Entity();
-		var table = pack.getTexture("table");
+		var table = pack.getTexture("cafe/table");
 		this._root.addChild(new Entity().add(new ImageSprite(table).setXY(-3, height - table.height)));
 	}
 

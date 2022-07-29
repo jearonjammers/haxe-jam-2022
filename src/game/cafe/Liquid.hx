@@ -41,7 +41,7 @@ class Liquid extends Component {
 
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
-		var mold = new EmitterMold(pack, "puke/puke");
+		var mold = new EmitterMold(pack, "cafe/puke/puke");
 		this._root.add(new EmitterSprite(mold).setRotation(90));
 	}
 

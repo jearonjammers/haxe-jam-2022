@@ -10,8 +10,8 @@ import flambe.Entity;
 import flambe.Component;
 
 class Meter extends Component {
-	public function new(pack:AssetPack, x:Float, y:Float, front:String) {
-		this.init(pack, x, y, front);
+	public function new(pack:AssetPack, x:Float, y:Float, front:String, mid:String) {
+		this.init(pack, x, y, front, mid);
 	}
 
 	override function onAdded() {
@@ -39,12 +39,12 @@ class Meter extends Component {
 		return this;
 	}
 
-	private function init(pack:AssetPack, x:Float, y:Float, front:String) {
+	private function init(pack:AssetPack, x:Float, y:Float, front:String, mid:String) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
 		this._root.get(Sprite).anchorY._ = 1000;
 
 		var back = new Entity().add(new ImageSprite(pack.getTexture("meterBack")));
-		var mid = new Entity().add(_fill = new ImageSprite(pack.getTexture("timeMid")));
+		var mid = new Entity().add(_fill = new ImageSprite(pack.getTexture(mid)));
 		this._fill.scissor = new Rectangle(0, 0, this._fill.getNaturalWidth(), this._fill.getNaturalHeight());
 		var front = new Entity().add(new ImageSprite(pack.getTexture(front)).setXY(-26, 0));
 

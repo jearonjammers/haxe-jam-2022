@@ -37,12 +37,12 @@ class Background extends Component {
 		var CLOUD_TIME = 5;
 
 		this._root = new Entity();
-		this._root.add(new ImageSprite(pack.getTexture("mainBack")));
-		var titleTex = pack.getTexture("title");
+		this._root.add(new ImageSprite(pack.getTexture("cafe/mainBack")));
+		var titleTex = pack.getTexture("cafe/title");
 		this._title = new Entity().add(new ImageSprite(titleTex).centerAnchor().setXY(390 + titleTex.width / 2, 179 + titleTex.height / 2));
 		this._title.get(Sprite).rotation.behavior = new Sine(-3, 3, CLOUD_TIME);
 
-		this._flamingo = new ImageSprite(pack.getTexture("flamingo")).setXY(1131, 594);
+		this._flamingo = new ImageSprite(pack.getTexture("cafe/flamingo")).setXY(1131, 594);
 		this._flamingo.x.behavior = new Sine(1131 - CLOUD_X_DIST, 1131 + CLOUD_X_DIST, CLOUD_TIME);
 		this._flamingo.rotation.behavior = new Sine(-5, 5, CLOUD_TIME * 2);
 
@@ -95,9 +95,9 @@ class BackgroundSun extends Component {
 		this._root.get(Sprite).anchorY.behavior = new Sine(20, 0, 2.5);
 
 		this._root //
-			.addChild(new Entity().add(_stripes = new ImageSprite(pack.getTexture("sun/sunStripes")).centerAnchor())) //
-			.addChild(new Entity().add(_sun = new ImageSprite(pack.getTexture("sun/sun")).centerAnchor())) //
-			.addChild(new Entity().add(new ImageSprite(pack.getTexture("sun/ear")).setXY(-125, -35))) //
+			.addChild(new Entity().add(_stripes = new ImageSprite(pack.getTexture("cafe/sun/sunStripes")).centerAnchor())) //
+			.addChild(new Entity().add(_sun = new ImageSprite(pack.getTexture("cafe/sun/sun")).centerAnchor())) //
+			.addChild(new Entity().add(new ImageSprite(pack.getTexture("cafe/sun/ear")).setXY(-125, -35))) //
 			.addChild(new Entity().add(new BackgroundSunEye(pack, -14, -50))) //
 			.addChild(new Entity().add(new BackgroundSunEye(pack, 72, -50))) //
 			.add(new BackgroundSunSmile(pack)); //
@@ -126,7 +126,7 @@ class BackgroundSunSmile extends Component {
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root //
-			.addChild(new Entity().add(new ImageSprite(pack.getTexture("sun/mouthSmile")).setXY(10, 55)));
+			.addChild(new Entity().add(new ImageSprite(pack.getTexture("cafe/sun/mouthSmile")).setXY(10, 55)));
 	}
 
 	private var _root:Entity;
@@ -150,11 +150,11 @@ class BackgroundSunEye extends Component {
 
 	private function init(pack:AssetPack, x:Float, y:Float) {
 		this._root = new Entity().add(new Sprite().setXY(x, y));
-		var eyeTex = pack.getTexture("sun/eye");
+		var eyeTex = pack.getTexture("cafe/sun/eye");
 		this._root.addChild(new Entity().add(new FillSprite(0xF4DEC9, eyeTex.width - 4, eyeTex.height - 4).setXY(2, 2)));
-		this._root.addChild(new Entity().add(_pupil = new ImageSprite(pack.getTexture("sun/eyePupil")).setXY(38, 70).centerAnchor()));
+		this._root.addChild(new Entity().add(_pupil = new ImageSprite(pack.getTexture("cafe/sun/eyePupil")).setXY(38, 70).centerAnchor()));
 		this._root.addChild(new Entity().add(new ImageSprite(eyeTex)));
-		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("sun/eyebrow")).setXY(36, 10).centerAnchor()));
+		this._root.addChild(new Entity().add(_brow = new ImageSprite(pack.getTexture("cafe/sun/eyebrow")).setXY(36, 10).centerAnchor()));
 	}
 
 	private var _root:Entity;

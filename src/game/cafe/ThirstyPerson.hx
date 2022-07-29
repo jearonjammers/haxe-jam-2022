@@ -59,7 +59,7 @@ class ThirstyPersonHead extends Component {
 
 	private function init(pack:AssetPack) {
 		this._root = new Entity().add(new Sprite());
-		this._head = new Entity().add(new ImageSprite(pack.getTexture("body/head")).setXY(0, -275).centerAnchor());
+		this._head = new Entity().add(new ImageSprite(pack.getTexture("cafe/body/head")).setXY(0, -275).centerAnchor());
 		this._root.addChild(this._head);
 		this._root.get(Sprite).anchorX.behavior = new Sine(-2, 2, 2);
 		this._root.get(Sprite).anchorY.behavior = new Sine(0, 10, 3);
@@ -85,7 +85,7 @@ class ThirstyPersonTorso extends Component {
 
 	private function init(pack:AssetPack) {
 		this._root = new Entity().add(new Sprite());
-		this._torso = new Entity().add(new ImageSprite(pack.getTexture("body/body")).centerAnchor());
+		this._torso = new Entity().add(new ImageSprite(pack.getTexture("cafe/body/body")).centerAnchor());
 		this._root.addChild(this._torso);
 	}
 

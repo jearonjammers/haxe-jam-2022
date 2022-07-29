@@ -1,5 +1,7 @@
 package game.runner;
 
+import flambe.animation.Sine;
+import flambe.animation.Ease;
 import game.cafe.CafeGame;
 import flambe.System;
 import flambe.Disposer;
@@ -34,7 +36,7 @@ class RunnerGame extends Component {
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
-		var METER_Y = 144;
+		var METER_Y = 180;
 		this._root = new Entity();
 		this._root //
 			.add(new FillSprite(0xEB3B24, width, height)) //
@@ -46,7 +48,7 @@ class RunnerGame extends Component {
 			.add(_controlDesktop = new ControlDesktop())
 			.add(_person = new Person(pack)) //
 			.add(_homeButton = new Button(pack, "homeButton", width - 121, 90)) //
-			.add(new Meter(pack, 1760, METER_Y, "drinkFront").show(true)); //
+			.add(new Meter(pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
 
 		_sceneryBack.add(new Bush(pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/bar")).setXY(300, 403)));
@@ -60,7 +62,13 @@ class RunnerGame extends Component {
 
 		_disposer.add(_person.hasFallen.connect(() -> {
 			_hasLost = true;
-		}));
+			var lostSpr = new ImageSprite(pack.getTexture("runner/lost")).centerAnchor().setXY(1920 / 2, 1080);
+			lostSpr.y.animateTo(1080 / 2, 0.5, Ease.backOut);
+			lostSpr.rotation.behavior = new Sine(-5, 5, 4);
+			lostSpr.scaleX.behavior = new Sine(0.9, 1, 4);
+			lostSpr.scaleY.behavior = new Sine(0.9, 1, 4);
+			this._root.addChild(new Entity().add(lostSpr));
+		}).once());
 
 		_disposer.add(_controlDesktop.state.changed.connect((s, _) -> {
 			switch [s, _person.movetype] {

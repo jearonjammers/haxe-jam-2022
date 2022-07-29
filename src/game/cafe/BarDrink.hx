@@ -131,7 +131,7 @@ class BarDrink extends Component {
 
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
-		var tex = pack.getTexture("beerStar");
+		var tex = pack.getTexture("cafe/beerStar");
 		var anchorX = tex.width / 2;
 		var anchorY = tex.height - 50;
 		_root.add(new ImageSprite(tex).setAnchor(anchorX, anchorY).setXY(_x, _y));

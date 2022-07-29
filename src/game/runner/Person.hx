@@ -76,6 +76,7 @@ class Person extends Component {
 		if (_anchor.rotation._ == -MAX_ANGLE || _anchor.rotation._ == MAX_ANGLE) {
 			hasFallen.emit();
 			this.move(Idle);
+			this._anchor.y.animateTo(FLOOR_Y, 0.25, Ease.bounceOut);
 			_hasFallen = true;
 		}
 	}
