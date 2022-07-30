@@ -29,8 +29,8 @@ class RunnerGame extends Component {
 			return;
 		}
 
-		return;
 		var dp = System.root.get(DrinkPercent);
+		var sc = System.root.get(OverallScore);
 		if (dp.percent > 0) {
 			dp.percent -= dt * 0.03;
 			_drinkMeter.setFill(dp.percent);
@@ -43,6 +43,13 @@ class RunnerGame extends Component {
 		} else {
 			_distWorld += dt * 225;
 			_distPerson += dt * 225;
+		}
+		if (_person.movetype == Surf) {
+			_surfDist += 10 * dt;
+		}
+
+		if (!_hasWon) {
+			sc.score._ = Math.floor(_distWorld / 80) + Math.floor(_surfDist);
 		}
 
 		_bg.setPercent(dp.percent);
@@ -111,6 +118,7 @@ class RunnerGame extends Component {
 				.add(_personSpr = new Sprite()) //
 				.add(_person = new Person(_pack))) //
 			.add(_homeButton = new Button(_pack, "homeButton", width - 121, 90)) //
+			.add(_points = new Points(_pack, 1550, 49)) //
 			.add(_drinkMeter = new Meter(_pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
 
 		_cloud1.x.behavior = new Sine(970, 1030, 4);
@@ -121,9 +129,15 @@ class RunnerGame extends Component {
 
 		_sceneryBack.add(new Bush(_pack, 1400, 729));
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
-		_sceneryMid.addChild(new Entity().add(new EnemyWorm(_pack, 1400, 985)));
+		_sceneryMid.addChild(new Entity().add(new EnemyWorm(_pack, 900, 985)));
+		_sceneryMid.addChild(new Entity().add(new EnemyBird(_pack, 1100, 685)));
+		_sceneryMid.addChild(new Entity().add(new EnemyCar(_pack, 1500, 985)));
 		_disposer = new Disposer();
 		_person.move(Walk);
+
+		_disposer.add(System.root.get(OverallScore).score.changed.connect((to, _) -> {
+			_points.setScore(to);
+		}));
 
 		_disposer.add(_homeButton.click.connect(() -> {
 			this.dispose();
@@ -206,5 +220,7 @@ class RunnerGame extends Component {
 	private var _sceneryMid:Entity;
 	private var _drinkMeter:Meter;
 	private var _pack:AssetPack;
+	private var _points:Points;
+	private var _surfDist:Float = 0;
 	private var _disposer:Disposer;
 }

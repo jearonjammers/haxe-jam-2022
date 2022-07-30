@@ -21,6 +21,7 @@ class Main {
 		container.visible = false;
 		System.root.add(container);
 		System.root.add(new DrinkPercent());
+		System.root.add(new OverallScore());
 		System.stage.resize.connect(() -> {
 			container.setSize(System.stage.width, System.stage.height);
 		});
