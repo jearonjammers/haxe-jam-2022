@@ -69,7 +69,7 @@ class RunnerGame extends Component {
 				new Delay(1),
 				new CallFunction(() -> {
 					this.dispose();
-					System.root.add(new ScoreGame(_pack, 1920, 1080));
+					System.root.add(new CafeGame(_pack, 1920, 1080));
 				})
 			]));
 		}

@@ -59,6 +59,7 @@ class ScoreGame extends Component {
 		scoreBottom.rotation.behavior = new Sine(5, -5, 4);
 		scoreBottom.scaleX.behavior = new Sine(1, 0.9, 4);
 		scoreBottom.scaleY.behavior = new Sine(1, 0.9, 4);
+		scoreBottom.alpha._ = 0;
 
 		_homeButton.click.connect(() -> {
 			this.dispose();
