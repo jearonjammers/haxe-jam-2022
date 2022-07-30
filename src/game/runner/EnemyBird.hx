@@ -30,6 +30,7 @@ class EnemyBird extends Component {
 	}
 
 	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
+		Audio.playSound_("sfx/runner/bird");
 		var anchorSprite = new Sprite();
 		var birdFeet = new ImageSprite(pack.getTexture("runner/bird/birdFeet"));
 		var birdBody = new ImageSprite(pack.getTexture("runner/bird/birdBody"));

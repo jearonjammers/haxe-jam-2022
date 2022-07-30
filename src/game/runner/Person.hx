@@ -150,6 +150,7 @@ class Person extends Component {
 
 		switch type {
 			case Jump:
+				Audio.playSound_("sfx/runner/jump");
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time);
 				_upperPivot.rotation.behavior = new Sine(-20, 2, time * 2);
 			case Crouch:
@@ -160,6 +161,7 @@ class Person extends Component {
 				_lowerPivot.anchorY.behavior = new Sine(0, 5, time / 2);
 				_upperPivot.rotation.behavior = new Sine(15, 8, time / 2);
 			case Surf:
+				Audio.playSound_("sfx/runner/crouch");
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time / 2);
 				_upperPivot.rotation.behavior = new Sine(-2, 2, time);
 				this._liquid.visible = true;

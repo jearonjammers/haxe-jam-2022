@@ -29,6 +29,7 @@ class EnemyCar extends Component {
 	}
 
 	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
+		Audio.playSound_("sfx/runner/car");
 		var car = new ImageSprite(pack.getTexture("runner/car/car"));
 		var carEye = new ImageSprite(pack.getTexture("runner/car/carEye"));
 		var carStar = new ImageSprite(pack.getTexture("runner/car/carStar"));

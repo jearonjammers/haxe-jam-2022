@@ -30,6 +30,7 @@ class EnemyWorm extends Component {
 	}
 
 	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
+		Audio.playSound_("sfx/runner/worm");
 		var anchorX = 77;
 		var anchorY = 230;
 		var tex = pack.getTexture("runner/worm/worm");
