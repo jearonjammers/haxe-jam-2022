@@ -60,6 +60,7 @@ class RunnerGame extends Component {
 		if (_distPerson < 690) {
 			_sceneryBack.get(Sprite).x._ = -_distWorld;
 			_sceneryMid.get(Sprite).x._ = -_distWorld;
+			_sceneryFront.get(Sprite).x._ = -_distWorld;
 			_personSpr.x._ = _distPerson;
 		} else {
 			_hasFinishedWalking = true;
@@ -117,6 +118,7 @@ class RunnerGame extends Component {
 			.addChild(new Entity() //
 				.add(_personSpr = new Sprite()) //
 				.add(_person = new Person(_pack))) //
+			.addChild(_sceneryFront = new Entity().add(new Sprite()))
 			.add(_homeButton = new Button(_pack, "homeButton", width - 121, 90)) //
 			.add(_points = new Points(_pack, 1550, 49)) //
 			.add(_drinkMeter = new Meter(_pack, 1760, METER_Y, "drinkFront", "drinkMid").show(true)); //
@@ -200,18 +202,35 @@ class RunnerGame extends Component {
 		}));
 
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
-		addBush(900);
-		addBush(2800);
-		addBush(3100);
-		addBush(5100);
-		addBush(8100);
-		addBush(11100);
-		addBush(14100);
-		addBush(15900);
+		addBushBack(900);
+		addTreeBack(1600);
+		addBushBack(2800);
+		addBushBack(1600);
+		addTreeBack(3800);
+		addBushBack(5100);
+		addTreeBack(7000);
+		addBushBack(8100);
+		addBushBack(11100);
+		addTreeBack(13000);
+		addBushBack(14100);
+		addBushBack(15900);
+		addBushFront(0);
+		addBushFront(1800);
+		addBushFront(4300);
+		addBushFront(7300);
+		addBushFront(13300);
 	}
 
-	private function addBush(xPos:Float) {
+	private function addBushBack(xPos:Float) {
 		_sceneryBack.addChild(new Entity().add(new Bush(_pack, xPos, 729)));
+	}
+
+	private function addBushFront(xPos:Float) {
+		_sceneryFront.addChild(new Entity().add(new Bush(_pack, xPos, 929)));
+	}
+
+	private function addTreeBack(xPos:Float) {
+		_sceneryBack.addChild(new Entity().add(new Tree(_pack, xPos, 620)));
 	}
 
 	private var _crouchIndex = 0;
@@ -259,6 +278,7 @@ class RunnerGame extends Component {
 	private var _homeButton:Button;
 	private var _sceneryBack:Entity;
 	private var _sceneryMid:Entity;
+	private var _sceneryFront:Entity;
 	private var _drinkMeter:Meter;
 	private var _pack:AssetPack;
 	private var _points:Points;
