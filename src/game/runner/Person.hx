@@ -1,5 +1,10 @@
 package game.runner;
 
+import flambe.script.CallFunction;
+import flambe.script.Delay;
+import flambe.script.Sequence;
+import flambe.script.Script;
+import flambe.display.ImageSprite;
 import flambe.animation.Ease;
 import flambe.util.Signal0;
 import flambe.math.FMath;
@@ -67,9 +72,9 @@ class Person extends Component {
 		}
 		_balanceMult = FMath.clamp(_balanceMult, 1, 10);
 		if (_isDown) {
-			// this._velo += dt * 1.25 * _startMult * _balanceMult;
+			this._velo += dt * 1.25 * _startMult * _balanceMult;
 		} else {
-			// this._velo -= dt * 1.25 * _startMult * _balanceMult;
+			this._velo -= dt * 1.25 * _startMult * _balanceMult;
 		}
 		_balance += this._velo;
 		handleRotation();
@@ -108,6 +113,30 @@ class Person extends Component {
 
 		this._liquid.setXY(50, -100, 130, 0);
 		this._liquid.visible = false;
+
+		this._root //
+			.addChild(new Entity() //
+				.add(_instruct1 = new ImageSprite(pack.getTexture("runner/instructMove")).setXY(120, -300))) //
+			.addChild(new Entity() //
+				.add(_instruct2 = new ImageSprite(pack.getTexture("runner/instructSurf")).setXY(120, -340))); //
+		_instruct2.visible = false;
+
+		this._root.add(new Script()).get(Script).run(new Sequence([new Delay(3), new CallFunction(handleInstruct1)]));
+	}
+
+	private function handleInstruct1():Void {
+		if (!_hasHandledInstruct1) {
+			_instruct1.visible = false;
+			_instruct2.visible = true;
+			_hasHandledInstruct1 = true;
+		}
+	}
+
+	private function handleInstruct2():Void {
+		if (_hasHandledInstruct1 && !_hasHandledInstruct2) {
+			_instruct2.visible = false;
+			_hasHandledInstruct2 = true;
+		}
 	}
 
 	public function move(type:PersonMoveType) {
@@ -134,6 +163,7 @@ class Person extends Component {
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time / 2);
 				_upperPivot.rotation.behavior = new Sine(-2, 2, time);
 				this._liquid.visible = true;
+				handleInstruct2();
 			case Idle:
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time / 2);
 				_upperPivot.rotation.behavior = new Sine(-2, 2, time);
@@ -174,6 +204,10 @@ class Person extends Component {
 	private var _startMult:Float = 0;
 	private var _isSturdy:Bool = false;
 	private var _liquid:Liquid;
+	private var _instruct1:Sprite;
+	private var _instruct2:Sprite;
+	private var _hasHandledInstruct1:Bool = false;
+	private var _hasHandledInstruct2:Bool = false;
 
 	private static inline var MAX_ANGLE = 80;
 	private static inline var JUMP_DURATION = 1;
