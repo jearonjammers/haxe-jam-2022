@@ -1,5 +1,6 @@
 package game.cafe;
 
+import flambe.script.Delay;
 import flambe.animation.Sine;
 import flambe.util.Value;
 import flambe.script.CallFunction;
@@ -88,6 +89,7 @@ class BarDrink extends Component {
 			this.state._ = Idle;
 			spr.x._ = this._x;
 		} else {
+			Audio.playSound_("sfx/cafe/bottleSlide");
 			this._root.add(new Script()).get(Script).run(new Sequence([
 				new AnimateTo(spr.x, _x, 0.666, Ease.cubeOut),
 				new CallFunction(() -> {
@@ -127,6 +129,13 @@ class BarDrink extends Component {
 		spr.x.animateTo(spr.x._ + x, 0.3333, Ease.sineIn);
 		spr.y.animateTo(-300, 0.3333, Ease.sineOut);
 		spr.rotation.animateTo(rotation, 0.3333, Ease.sineOut);
+		Audio.playSound_("sfx/cafe/bottleThrow");
+		this._root.add(new Script()).get(Script).run(new Sequence([
+			new Delay(0.5),
+			new CallFunction(() -> {
+				Audio.playSound_("sfx/cafe/bottleBreak");
+			})
+		]));
 	}
 
 	private function get_rotation():Float {

@@ -27,49 +27,53 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onBootstrapLoaded.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevTextLoaded.bind(width, height)).once();
 	}
 
-	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
+	static function onDevTextLoaded(width:Int, height:Int, pack:AssetPack):Void {
 		var loader = new Loader(pack, width, height);
 		System.root.add(loader);
 		System.root.get(Container).visible = true;
 		var main = Manifest.fromAssets("main");
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
+			Audio.make(mainPack);
 			System.root.add(new TextGame(mainPack, width, height));
 		}).once();
 	}
 
-	static function onDevScore(width:Int, height:Int, pack:AssetPack):Void {
+	static function onDevScoreLoaded(width:Int, height:Int, pack:AssetPack):Void {
 		var loader = new Loader(pack, width, height);
 		System.root.add(loader);
 		System.root.get(Container).visible = true;
 		var main = Manifest.fromAssets("main");
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
+			Audio.make(mainPack);
 			System.root.add(new ScoreGame(mainPack, width, height));
 		}).once();
 	}
 
-	static function onDevRunner(width:Int, height:Int, pack:AssetPack):Void {
+	static function onDevRunnerLoaded(width:Int, height:Int, pack:AssetPack):Void {
 		var loader = new Loader(pack, width, height);
 		System.root.add(loader);
 		System.root.get(Container).visible = true;
 		var main = Manifest.fromAssets("main");
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
+			Audio.make(mainPack);
 			System.root.add(new RunnerGame(mainPack, width, height));
 		}).once();
 	}
 
-	static function onDevCafe(width:Int, height:Int, pack:AssetPack):Void {
+	static function onDevCafeLoaded(width:Int, height:Int, pack:AssetPack):Void {
 		var loader = new Loader(pack, width, height);
 		System.root.add(loader);
 		System.root.get(Container).visible = true;
 		var main = Manifest.fromAssets("main");
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
+			Audio.make(mainPack);
 			System.root.add(new CafeGame(mainPack, width, height));
 			System.root.get(CafeGame).nextState();
 		}).once();
@@ -92,6 +96,7 @@ class Main {
 				var main = Manifest.fromAssets("main");
 				System.loadAssetPack(main).success.connect(mainPack -> {
 					loader.dispose();
+					Audio.make(mainPack);
 					System.root.add(new CafeGame(mainPack, width, height));
 				}).once();
 			}

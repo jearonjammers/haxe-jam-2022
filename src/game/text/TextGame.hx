@@ -34,6 +34,7 @@ class TextGame extends Component {
 		this._root.add(new FillSprite(0x000000, width, height));
 		this._root.addChild(new Entity().add(_phone = new ImageSprite(pack.getTexture("text/phone")).centerAnchor()));
 		_phone.setXY(1810, 935);
+		Audio.playSound_("sfx/text/passOut");
 
 		var offset = 550;
 		var Y_0 = 250 + offset;
@@ -54,42 +55,66 @@ class TextGame extends Component {
 		_text3.alpha._ = 0;
 		_text4.alpha._ = 0;
 		this._root.add(new Script()).get(Script).run(new Sequence([
-			new Delay(3),
+			new Delay(1),
+			new CallFunction(() -> {
+				// Audio.playSound_("sfx/text/vibrate");
+			}),
 			new Sequence([
 				new AnimateTo(_phone.rotation, -5, 0.125),
 				new AnimateTo(_phone.rotation, 5, 0.125),
 				new AnimateTo(_phone.rotation, 0, 0.125),
 			]),
+			new CallFunction(() -> {
+				Audio.playSound_("sfx/text/bing");
+			}),
 			new Parallel([
 				new AnimateTo(_text1.alpha, 1, 0.5),
 				new AnimateTo(_texts.y, Y_1, 0.5, Ease.backOut)
 			]),
 			new Delay(2.5),
+			new CallFunction(() -> {
+				// Audio.playSound_("sfx/text/vibrate");
+			}),
 			new Sequence([
 				new AnimateTo(_phone.rotation, -5, 0.125),
 				new AnimateTo(_phone.rotation, 5, 0.125),
 				new AnimateTo(_phone.rotation, 0, 0.125),
 			]),
+			new CallFunction(() -> {
+				Audio.playSound_("sfx/text/bing");
+			}),
 			new Parallel([
 				new AnimateTo(_text2.alpha, 1, 0.5),
 				new AnimateTo(_texts.y, Y_2, 0.5, Ease.backOut)
 			]),
 			new Delay(2.5),
+			new CallFunction(() -> {
+				// Audio.playSound_("sfx/text/vibrate");
+			}),
 			new Sequence([
 				new AnimateTo(_phone.rotation, -5, 0.125),
 				new AnimateTo(_phone.rotation, 5, 0.125),
 				new AnimateTo(_phone.rotation, 0, 0.125),
 			]),
+			new CallFunction(() -> {
+				Audio.playSound_("sfx/text/bing");
+			}),
 			new Parallel([
 				new AnimateTo(_text3.alpha, 1, 0.5),
 				new AnimateTo(_texts.y, Y_3, 0.5, Ease.backOut)
 			]),
 			new Delay(2.5),
+			new CallFunction(() -> {
+				// Audio.playSound_("sfx/text/vibrate");
+			}),
 			new Sequence([
 				new AnimateTo(_phone.rotation, -5, 0.125),
 				new AnimateTo(_phone.rotation, 5, 0.125),
 				new AnimateTo(_phone.rotation, 0, 0.125),
 			]),
+			new CallFunction(() -> {
+				Audio.playSound_("sfx/text/bing");
+			}),
 			new Parallel([
 				new AnimateTo(_text4.alpha, 1, 0.5),
 				new AnimateTo(_texts.y, Y_4, 0.5, Ease.backOut)

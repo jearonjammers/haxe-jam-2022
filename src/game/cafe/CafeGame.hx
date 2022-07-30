@@ -45,6 +45,7 @@ class CafeGame extends Component {
 			if (_thirstyPerson.state != Mad) {
 				if (isDrinking() && _thirstyPerson.state != Drinking) {
 					_thirstyPerson.drink();
+					Audio.playSound_("sfx/cafe/chug");
 				} else if (!isDrinking() && _thirstyPerson.state != Thirsty) {
 					_thirstyPerson.thirst();
 				}
@@ -53,6 +54,9 @@ class CafeGame extends Component {
 			if (isDrinking()) {
 				_fillAmount += dt;
 			} else if (isSpilling()) {
+				if (_spillAmount == 0) {
+					Audio.playSound_("sfx/cafe/bottleSplash");
+				}
 				_spillAmount += dt;
 			}
 
@@ -77,9 +81,16 @@ class CafeGame extends Component {
 			var fillScale = _fillAmount / FILL_MAX;
 			this._meterDrink.get(Meter).setFill(fillScale);
 			var scale = 1 - _timeElapsed / TIME_DURATION;
+
+			if (!_isWarning && (TIME_DURATION - _timeElapsed) < 10) {
+				_isWarning = true;
+				Audio.playSound_("sfx/cafe/timer");
+			}
+
 			this._meterTime.get(Meter).setFill(scale);
 			if (_timeElapsed >= TIME_DURATION) {
 				_timeComplete = true;
+				Audio.playSound_("sfx/cafe/partyHarder");
 				var spr = new ImageSprite(_pack.getTexture("cafe/fail"));
 				this._root.addChild(new Entity().add(spr.centerAnchor().setXY(960, 540)));
 				spr.rotation.behavior = new Sine(-5, 5, 4);
@@ -129,10 +140,14 @@ class CafeGame extends Component {
 
 		_disposer.add(_homeButton.click.connect(() -> {
 			this.dispose();
+			Audio.playSound_("click");
 			System.root.add(new CafeGame(pack, width, height));
 		}));
 
-		this._disposer.add(_playButton.click.connect(this.nextState).once());
+		this._disposer.add(_playButton.click.connect(() -> {
+			this.nextState();
+			Audio.playSound_("click");
+		}).once());
 
 		this._disposer.add(this._thirstyArms.reachX.changed.connect((to, _) -> {
 			this._reachX = to;
@@ -186,6 +201,7 @@ class CafeGame extends Component {
 	private var _reachX:Float = 0.0;
 	private var _reachY:Float = 0.0;
 	private var _cooldown:Float = 0.0;
+	private var _isWarning = false;
 
 	private static inline var TIME_DURATION = 30;
 	private static inline var MAX_SPILL = 2;

@@ -27,6 +27,8 @@ class CafeSun extends Component {
 
 	public function mad() {
 		_sun.mad();
+		Audio.playSound_("sfx/cafe/angrySun");
+		Audio.playSound_("sfx/cafe/sunMouth");
 	}
 
 	private function init(pack:AssetPack, x:Float, y:Float) {
