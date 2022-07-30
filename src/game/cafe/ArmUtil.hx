@@ -19,11 +19,11 @@ import game.MathUtil;
 using game.SpriteUtil;
 
 class ArmUtil {
-	public static inline var SEGMENT_LENGTH_TOP = 281;
-	public static inline var SEGMENT_LENGTH_BOTTOM = 298;
-	public static inline var UPPERARM_WIDTH = 93;
-	public static inline var LOWERARM_WIDTH = 79;
-	public static inline var ARM_OVERLAP = 30;
+	public static inline var SEGMENT_LENGTH_TOP = 392;
+	public static inline var SEGMENT_LENGTH_BOTTOM = 400;
+	public static inline var UPPERARM_WIDTH = 78;
+	public static inline var LOWERARM_WIDTH = 99;
+	public static inline var ARM_OVERLAP = 35;
 	public static inline var REACH = SEGMENT_LENGTH_TOP + SEGMENT_LENGTH_BOTTOM - ARM_OVERLAP;
 
 	public static function wave(onComplete:Void->Void, root:Entity, upperSpite:Sprite, lowerSprite:Sprite, angles:{top:Float, bottom:Float, canReach:Bool}, isFlipped:Bool):Void {

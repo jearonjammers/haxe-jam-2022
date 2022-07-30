@@ -171,13 +171,10 @@ class ThirstyArm extends Component {
 				.setXY(ArmUtil.UPPERARM_WIDTH / 2, ArmUtil.SEGMENT_LENGTH_TOP) //
 				.setAnchor(ArmUtil.LOWERARM_WIDTH / 2, ArmUtil.ARM_OVERLAP));
 
-		this._hand = new Entity().add(new Sprite().setXY(ArmUtil.LOWERARM_WIDTH / 2, ArmUtil.SEGMENT_LENGTH_BOTTOM));
-		this._hand.addChild(new Entity().add(new ImageSprite(pack.getTexture("cafe/body/hand")).setAnchor(52, 80)));
 		this._idleAnim.behavior = new Sine(-500, -400, 0.5);
 
 		this._root.addChild(this._upper);
 		this._upper.addChild(this._lower);
-		this._lower.addChild(this._hand);
 		this._lower.addChild(_elbowPoint = new Entity().add(new Sprite()));
 
 		if (!this._isFlipped) {
@@ -208,7 +205,7 @@ class ThirstyArm extends Component {
 	private var _upper:Entity;
 	private var _lower:Entity;
 	private var _elbowPoint:Entity;
-	private var _hand:Entity;
+	// private var _hand:Entity;
 	private var _isFlipped:Bool;
 	private var _viewX:Float = 0;
 	private var _viewY:Float = 0;

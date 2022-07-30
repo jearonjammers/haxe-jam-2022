@@ -27,7 +27,7 @@ class Main {
 		});
 		System.stage.resize.emit();
 		var bootstrap = Manifest.fromAssets("bootstrap");
-		System.loadAssetPack(bootstrap).success.connect(onDevRunner.bind(width, height)).once();
+		System.loadAssetPack(bootstrap).success.connect(onDevCafe.bind(width, height)).once();
 	}
 
 	static function onDevText(width:Int, height:Int, pack:AssetPack):Void {
@@ -71,6 +71,7 @@ class Main {
 		System.loadAssetPack(main).success.connect(mainPack -> {
 			loader.dispose();
 			System.root.add(new CafeGame(mainPack, width, height));
+			System.root.get(CafeGame).nextState();
 		}).once();
 	}
 

@@ -47,6 +47,16 @@ class CafeGame extends Component {
 				}
 			}
 		}
+
+		if (!_timeComplete) {
+			_timeElapsed += dt;
+			this._meterDrink.get(Meter).setFill(0);
+			var scale = 1 - _timeElapsed / TIME_DURATION;
+			this._meterTime.get(Meter).setFill(scale);
+			if (_timeElapsed > TIME_DURATION) {
+				_timeComplete = true;
+			}
+		}
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
@@ -54,7 +64,7 @@ class CafeGame extends Component {
 		var METER_Y = 180;
 		this._disposer = new Disposer();
 		this._root = new Entity();
-		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront", "timeMid").setFill(0.4));
+		this._meterTime = new Entity().add(new Meter(pack, 100, METER_Y, "timeFront", "timeMid"));
 		this._meterDrink = new Entity().add(new Meter(pack, 1760, METER_Y, "drinkFront", "drinkMid"));
 		this._root //
 			.add(new Sprite())
@@ -78,11 +88,13 @@ class CafeGame extends Component {
 		}));
 
 		this._disposer.add(_playButton.click.connect(this.nextState).once());
+
+		this._meterDrink.get(Meter).setFill(0);
+		this._meterTime.get(Meter).setFill(1);
 	}
 
 	public function nextState() {
 		this._root.get(Background).nextState();
-		// _anchorY.behavior = new Sine(0, 0, 3);
 		_anchorY.behavior = new Sine(5, 0, 3);
 		_isGameplay = true;
 		_playButton.dispose();
@@ -92,7 +104,6 @@ class CafeGame extends Component {
 		this._root.add(new Script()).get(Script).run(new Sequence([
 			new AnimateTo(_anchorX, -200, 1, Ease.cubeOut),
 			new CallFunction(() -> {
-				// _anchorX.behavior = new Sine(0, 0, 2);
 				_anchorX.behavior = new Sine(-200, 200, 2);
 			})
 		]));
@@ -113,4 +124,9 @@ class CafeGame extends Component {
 	private var _anchorX = new AnimatedFloat(0);
 	private var _anchorY = new AnimatedFloat(0);
 	private var _rotation = new AnimatedFloat(0);
+	private var _drinkAmount = 0.0;
+	private var _timeElapsed = 0.0;
+	private var _timeComplete = false;
+
+	private static inline var TIME_DURATION = 30;
 }
