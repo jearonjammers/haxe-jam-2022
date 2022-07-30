@@ -52,7 +52,6 @@ class RunnerGame extends Component {
 			sc.score._ = Math.floor(_distWorld / 80) + Math.floor(_surfDist);
 		}
 
-		return;
 		_bg.setPercent(dp.percent);
 		_floor.setPercent(dp.percent);
 		_cloud1.rotation._ = 180 * Ease.sineOut(dp.percent);
@@ -201,13 +200,18 @@ class RunnerGame extends Component {
 		}));
 
 		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
-		// addWorm(1400);
-		addBird(1100);
-		// addCar(1500);
+		addBush(900);
+		addBush(2800);
+		addBush(3100);
+		addBush(5100);
+		addBush(8100);
+		addBush(11100);
+		addBush(14100);
+		addBush(15900);
 	}
 
-	private function addBush() {
-		_sceneryBack.add(new Bush(_pack, 1400, 729));
+	private function addBush(xPos:Float) {
+		_sceneryBack.addChild(new Entity().add(new Bush(_pack, xPos, 729)));
 	}
 
 	private var _crouchIndex = 0;
