@@ -72,9 +72,9 @@ class Person extends Component {
 		}
 		_balanceMult = FMath.clamp(_balanceMult, 1, 10);
 		if (_isDown) {
-			this._velo += dt * 1.25 * _startMult * _balanceMult;
+			// this._velo += dt * 1.25 * _startMult * _balanceMult;
 		} else {
-			this._velo -= dt * 1.25 * _startMult * _balanceMult;
+			// this._velo -= dt * 1.25 * _startMult * _balanceMult;
 		}
 		_balance += this._velo;
 		handleRotation();

@@ -9,8 +9,8 @@ import flambe.Entity;
 import flambe.Component;
 
 class EnemyBird extends Component {
-	public function new(pack:AssetPack, x:Float, y:Float) {
-		this.init(pack, x, y);
+	public function new(pack:AssetPack, index:Int, x:Float, y:Float) {
+		this.init(pack, index, x, y);
 	}
 
 	override function onAdded() {
@@ -21,7 +21,7 @@ class EnemyBird extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack, x:Float, y:Float) {
+	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
 		var anchorSprite = new Sprite();
 		var birdFeet = new ImageSprite(pack.getTexture("runner/bird/birdFeet"));
 		var birdBody = new ImageSprite(pack.getTexture("runner/bird/birdBody"));
@@ -31,8 +31,7 @@ class EnemyBird extends Component {
 			.add(new Sprite().setXY(x, y)) //
 			.addChild(new Entity().add(anchorSprite = new Sprite()) //
 				.addChild(new Entity().add(birdFeet //
-					.setAnchor(8, 12)
-                        .setXY(50, 50))) //
+					.setAnchor(8, 12).setXY(50, 50))) //
 				.addChild(new Entity().add(birdBody //
 					.setAnchor(266, 266))) //
 				.addChild(new Entity().add(birdWing //
@@ -46,6 +45,10 @@ class EnemyBird extends Component {
 		anchorSprite.rotation.behavior = new Sine(-5, 5);
 		birdHat.rotation.behavior = new Sine(30, -10, 5);
 		birdWing.rotation.behavior = new Sine(30, -20, 0.5);
+
+		if (index == 0) {
+			this._root.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/instructCrouch")).setXY(-220, 100)));
+		}
 	}
 
 	private var _root:Entity;

@@ -9,8 +9,8 @@ import flambe.Entity;
 import flambe.Component;
 
 class EnemyWorm extends Component {
-	public function new(pack:AssetPack, x:Float, y:Float) {
-		this.init(pack, x, y);
+	public function new(pack:AssetPack, index :Int, x:Float, y:Float) {
+		this.init(pack, index, x, y);
 	}
 
 	override function onAdded() {
@@ -21,7 +21,7 @@ class EnemyWorm extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack, x:Float, y:Float) {
+	private function init(pack:AssetPack, index :Int, x:Float, y:Float) {
 		var anchorX = 77;
 		var anchorY = 230;
 		var tex = pack.getTexture("runner/worm/worm");
@@ -39,6 +39,10 @@ class EnemyWorm extends Component {
 
 		_worm.y.behavior = new Sine(0, 300, 2);
 		_worm.rotation.behavior = new Sine(-15, 15, 1);
+
+		if(index == 0) {
+			this._root.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/instructJump")).setXY(-220, -470)));
+		}
 	}
 
 	private var _root:Entity;

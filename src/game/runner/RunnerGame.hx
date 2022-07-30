@@ -52,6 +52,7 @@ class RunnerGame extends Component {
 			sc.score._ = Math.floor(_distWorld / 80) + Math.floor(_surfDist);
 		}
 
+		return;
 		_bg.setPercent(dp.percent);
 		_floor.setPercent(dp.percent);
 		_cloud1.rotation._ = 180 * Ease.sineOut(dp.percent);
@@ -126,12 +127,6 @@ class RunnerGame extends Component {
 
 		_cloud2.x.behavior = new Sine(1370, 1430, 4.5);
 		_cloud2.y.behavior = new Sine(130, 100, 8.5);
-
-		_sceneryBack.add(new Bush(_pack, 1400, 729));
-		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
-		_sceneryMid.addChild(new Entity().add(new EnemyWorm(_pack, 900, 985)));
-		_sceneryMid.addChild(new Entity().add(new EnemyBird(_pack, 1100, 685)));
-		_sceneryMid.addChild(new Entity().add(new EnemyCar(_pack, 1500, 985)));
 		_disposer = new Disposer();
 		_person.move(Walk);
 
@@ -204,6 +199,43 @@ class RunnerGame extends Component {
 				case _:
 			}
 		}));
+
+		_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/bar")).setXY(300, 403)));
+		// addWorm(1400);
+		addBird(1100);
+		// addCar(1500);
+	}
+
+	private function addBush() {
+		_sceneryBack.add(new Bush(_pack, 1400, 729));
+	}
+
+	private var _crouchIndex = 0;
+
+	private function addBird(xPos:Float) {
+		_sceneryMid.addChild(new Entity().add(new EnemyBird(_pack, _crouchIndex++, xPos, 685)));
+	}
+
+	private var _jumpIndex = 0;
+
+	private function addWorm(xPos:Float) {
+		_sceneryMid.addChild(new Entity().add(new EnemyWorm(_pack, _jumpIndex++, xPos, 985)));
+	}
+
+	private function addCar(xPos:Float) {
+		_sceneryMid.addChild(new Entity().add(new EnemyCar(_pack, _jumpIndex++, xPos, 985)));
+	}
+
+	private function addEnemy(xPos:Float) {
+		var type = Math.floor(Math.random() * 3);
+		switch type {
+			case 0:
+				addWorm(xPos);
+			case 1:
+				addBird(xPos);
+			case 2:
+				addCar(xPos);
+		}
 	}
 
 	private var _root:Entity;
