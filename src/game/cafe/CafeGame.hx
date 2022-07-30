@@ -63,7 +63,7 @@ class CafeGame extends Component {
 			.addChild(new Entity().add(this._thirstyPerson = new ThirstyPerson(pack, width, height))) //
 			.add(new BarTable(pack, height)) //
 			.addChild(new Entity().add(this._thirstyArms = new ThirstyArms(pack, width, height))) //
-			.add(this._liquid = new Liquid(pack)) //
+			.add(this._liquid = new Liquid(pack, "cafe")) //
 			.add(this._barDrinks = new Bar(pack, this._liquid))
 			.addChild(new Entity().add(_homeButton = new Button(pack, "homeButton", width - 121, 90))) //
 			.addChild(this._meterTime) //

@@ -27,7 +27,7 @@ class EnemyCar extends Component {
 		var carWheel1 = new ImageSprite(pack.getTexture("runner/car/carWheel"));
 		var carWheel2 = new ImageSprite(pack.getTexture("runner/car/carWheel"));
 		this._root = new Entity() //
-			.add(new Sprite().setXY(x, y)) //
+			.add(new Sprite().setAnchor(0, 30).setXY(x, y)) //
 			.addChild(new Entity().add(car //
 				.setAnchor(226, 220).setXY(0, 0))) //
 			.addChild(new Entity().add(carEye //

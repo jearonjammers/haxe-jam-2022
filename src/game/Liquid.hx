@@ -1,4 +1,4 @@
-package game.cafe;
+package game;
 
 import flambe.math.FMath;
 import flambe.display.EmitterMold;
@@ -10,8 +10,8 @@ import flambe.Component;
 class Liquid extends Component {
 	public var visible(get, set):Bool;
 
-	public function new(pack:AssetPack) {
-		this.init(pack);
+	public function new(pack:AssetPack, area :String) {
+		this.init(pack, area);
 	}
 
 	override function onAdded() {
@@ -39,9 +39,9 @@ class Liquid extends Component {
 		return this._root.get(EmitterSprite).visible = visible;
 	}
 
-	private function init(pack:AssetPack) {
+	private function init(pack:AssetPack, area :String) {
 		this._root = new Entity();
-		var mold = new EmitterMold(pack, "cafe/puke/puke");
+		var mold = new EmitterMold(pack, '${area}/puke/puke');
 		this._root.add(new EmitterSprite(mold).setRotation(90));
 	}
 

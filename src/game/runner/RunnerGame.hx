@@ -169,6 +169,11 @@ class RunnerGame extends Component {
 				case [Right, Crouch]: // ignore if in crouch state
 				case [Right, _]:
 					_person.move(Surf);
+					if(!_hasWon) {
+						var xpos = -_sceneryMid.get(Sprite).x._ + 680;
+						var ypos = 940;
+						_sceneryMid.addChild(new Entity().add(new ImageSprite(_pack.getTexture("runner/mess")).setScale(0.6).setXY(xpos, ypos)));
+					}
 				// request crouch
 				case [Down, Jump]: // ignore if in jump state
 				case [Down, Surf]: // ignore if in surf state

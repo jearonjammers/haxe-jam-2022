@@ -103,13 +103,18 @@ class Person extends Component {
 				.addChild(new Entity() //
 					.add(_upperPivot = new Sprite()) //
 					.add(_torso = new PersonTorso(pack, 0, 0)) //
-					.add(_head = new PersonHead(pack))));
+					.add(_head = new PersonHead(pack)))
+				.add(this._liquid = new Liquid(pack, "runner"))); //
+
+		this._liquid.setXY(50, -100, 130, 0);
+		this._liquid.visible = false;
 	}
 
 	public function move(type:PersonMoveType) {
 		if (movetype == type || _hasFallen || _isSturdy) {
 			return;
 		}
+		this._liquid.visible = false;
 		var time = 0.4;
 		movetype = type;
 		_elapsed = 0;
@@ -128,6 +133,7 @@ class Person extends Component {
 			case Surf:
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time / 2);
 				_upperPivot.rotation.behavior = new Sine(-2, 2, time);
+				this._liquid.visible = true;
 			case Idle:
 				_lowerPivot.anchorY.behavior = new Sine(0, 0, time / 2);
 				_upperPivot.rotation.behavior = new Sine(-2, 2, time);
@@ -167,6 +173,7 @@ class Person extends Component {
 	private var _balanceMult:Float = 1;
 	private var _startMult:Float = 0;
 	private var _isSturdy:Bool = false;
+	private var _liquid:Liquid;
 
 	private static inline var MAX_ANGLE = 80;
 	private static inline var JUMP_DURATION = 1;

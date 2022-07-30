@@ -24,16 +24,16 @@ class EnemyWorm extends Component {
 	private function init(pack:AssetPack, x:Float, y:Float) {
 		var anchorX = 77;
 		var anchorY = 230;
-		var tex = pack.getTexture("runner/puke/worm");
+		var tex = pack.getTexture("runner/worm/worm");
 		this._root = new Entity() //
 			.add(new Sprite().setXY(x, y)) //
-			.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/puke/wormHole")) //
+			.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/worm/wormHole")) //
 				.centerAnchor())) //
 			.addChild(new Entity() //
 				.add(_clip = new Sprite()) //
-				.addChild(new Entity().add(_worm = new ImageSprite(pack.getTexture("runner/puke/worm")) //
+				.addChild(new Entity().add(_worm = new ImageSprite(pack.getTexture("runner/worm/worm")) //
 					.setAnchor(anchorX, anchorY)))) //
-			.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/puke/wormHoleClip")) //
+			.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/worm/wormHoleClip")) //
 				.setAnchor(128.5, -11))); //
 		_clip.scissor = new Rectangle(-(anchorX + PADDING), -(anchorY + PADDING), tex.width + PADDING * 2, (tex.height + PADDING) - CLIP_LENGTH);
 
