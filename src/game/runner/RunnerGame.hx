@@ -49,7 +49,7 @@ class RunnerGame extends Component {
 		}
 
 		if (!_hasWon) {
-			sc.score._ = Math.floor(_distWorld / 80) + Math.floor(_surfDist);
+			sc.scoreSecond._ = Math.floor(_distWorld / 80) + Math.floor(_surfDist);
 		}
 
 		_bg.setPercent(dp.percent);
@@ -145,8 +145,8 @@ class RunnerGame extends Component {
 		_disposer = new Disposer();
 		_person.move(Walk);
 
-		_disposer.add(System.root.get(OverallScore).score.changed.connect((to, _) -> {
-			_points.setScore(to);
+		_disposer.add(System.root.get(OverallScore).scoreSecond.changed.connect((to, _) -> {
+			_points.setScore(to + System.root.get(OverallScore).scoreFirst._);
 		}));
 
 		_disposer.add(_homeButton.click.connect(() -> {
