@@ -31,6 +31,14 @@ class Background extends Component {
 		this._flamingo.anchorY.animateTo(60, 2, Ease.cubeOut);
 	}
 
+	public function smile() {
+		_sun.smile();
+	}
+
+	public function mad() {
+		_sun.mad();
+	}
+
 	private function init(pack:AssetPack) {
 		var CLOUD_X_DIST = 30;
 		var CLOUD_Y_DIST = 15;
@@ -61,7 +69,7 @@ class Background extends Component {
 			.addChild(new Entity().add(cloud1))
 			.addChild(new Entity().add(cloud2))
 			.addChild(new Entity().add(cloud3))
-			.add(new CafeSun(pack, 300, 90))
+			.add(_sun = new CafeSun(pack, 300, 90))
 			.addChild(this._title) //
 			.addChild(new Entity().add(this._flamingo)); //
 	}
@@ -69,4 +77,5 @@ class Background extends Component {
 	private var _root:Entity;
 	private var _title:Entity;
 	private var _flamingo:Sprite;
+	private var _sun:CafeSun;
 }

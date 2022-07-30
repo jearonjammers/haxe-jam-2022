@@ -43,6 +43,10 @@ class ThirstyPerson extends Component {
 		this._head.get(ThirstyPersonHead).thirst();
 	}
 
+	public function mad() {
+		this._head.get(ThirstyPersonHead).mad();
+	}
+
 	private function get_state():ThirstyPersonState {
 		return this._head.get(ThirstyPersonHead).state;
 	}
@@ -88,7 +92,7 @@ class ThirstyPersonHead extends Component {
 		this._root.get(Sprite).rotation.behavior = new Sine(-5, 5, 5);
 		this._root.addChild(_features = new Entity());
 
-		drink();
+		thirst();
 	}
 
 	public function drink() {
@@ -114,6 +118,18 @@ class ThirstyPersonHead extends Component {
 				.setXY(0, -290) //
 				.centerAnchor())); //
 		eyes.scaleY.behavior = new Sine(1, 0.9, 0.5);
+	}
+
+	public function mad() {
+		this.state = Mad;
+		_features.disposeChildren();
+		var eyes = new ImageSprite(_pack.getTexture("cafe/body/eyesMad"));
+		_features //
+			.addChild(new Entity().add(new ImageSprite(_pack.getTexture("cafe/body/mouthMad")) //
+				.setXY(-2, -155).centerAnchor())) //
+			.addChild(new Entity().add(eyes //
+				.setXY(0, -290) //
+				.centerAnchor())); //
 	}
 
 	private var _root:Entity;

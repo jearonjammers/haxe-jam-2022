@@ -14,9 +14,9 @@ class Bar extends Component {
 	public var drink:Null<BarDrink> = null;
 	public var liquid:Liquid;
 
-	public function new(pack:AssetPack, liquid:Liquid) {
+	public function new(pack:AssetPack, liquid:Liquid, game:CafeGame) {
 		this.liquid = liquid;
-		this.init(pack);
+		this.init(pack, game);
 	}
 
 	override function onAdded() {
@@ -26,6 +26,13 @@ class Bar extends Component {
 	override function onRemoved() {
 		owner.removeChild(this._root);
 		this._disposer.dispose();
+	}
+
+	public function toss() {
+		for (slot in _slots) {
+			slot.toss();
+		}
+		this.drink = null;
 	}
 
 	override function onUpdate(dt:Float) {
@@ -61,7 +68,7 @@ class Bar extends Component {
 		}
 	}
 
-	private function init(pack:AssetPack) {
+	private function init(pack:AssetPack, game:CafeGame) {
 		this._root = new Entity().add(new Sprite());
 		this._disposer = new Disposer();
 		_slots = [];
@@ -75,7 +82,7 @@ class Bar extends Component {
 		];
 		for (i in 0...bottlePositions.length) {
 			var pos = bottlePositions[i];
-			var drink = new BarDrink(pack, pos.x, pos.y, this);
+			var drink = new BarDrink(pack, pos.x, pos.y, this, game);
 			var e = new Entity().add(drink);
 			drink.turnOff();
 			_slots.push(drink);

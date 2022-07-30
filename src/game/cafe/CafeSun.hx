@@ -21,13 +21,22 @@ class CafeSun extends Component {
 		owner.removeChild(this._root);
 	}
 
+	public function smile() {
+		_sun.smile();
+	}
+
+	public function mad() {
+		_sun.mad();
+	}
+
 	private function init(pack:AssetPack, x:Float, y:Float) {
 		this._root = new Entity();
 		this._root //
-			.add(new Sprite().setXY(x, y)).add(new BackgroundSun(pack));
+			.add(new Sprite().setXY(x, y)).add(_sun = new BackgroundSun(pack));
 	}
 
 	private var _root:Entity;
+	private var _sun:BackgroundSun;
 }
 
 class BackgroundSun extends Component {
@@ -47,6 +56,14 @@ class BackgroundSun extends Component {
 		_stripes.rotation._ += dt * 20;
 	}
 
+	public function smile() {
+		_mouth.smile();
+	}
+
+	public function mad() {
+		_mouth.mad();
+	}
+
 	private function init(pack:AssetPack) {
 		this._root = new Entity();
 		this._root.add(new Sprite());
@@ -59,7 +76,7 @@ class BackgroundSun extends Component {
 			.addChild(new Entity().add(new ImageSprite(pack.getTexture("cafe/sun/ear")).setXY(-125, -35))) //
 			.addChild(new Entity().add(new BackgroundSunEye(pack, -14, -50))) //
 			.addChild(new Entity().add(new BackgroundSunEye(pack, 72, -50))) //
-			.add(new BackgroundSunSmile(pack)); //
+			.add(_mouth = new BackgroundSunSmile(pack)); //
 	}
 
 	private var _root:Entity;
@@ -67,11 +84,13 @@ class BackgroundSun extends Component {
 	private var _sun:Sprite;
 	private var _eyeLeft:BackgroundSunEye;
 	private var _eyeRight:BackgroundSunEye;
+	private var _mouth:BackgroundSunSmile;
 }
 
 class BackgroundSunSmile extends Component {
 	public function new(pack:AssetPack) {
-		this.init(pack);
+		_pack = pack;
+		this.init();
 	}
 
 	override function onAdded() {
@@ -82,16 +101,25 @@ class BackgroundSunSmile extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack) {
+	private function init() {
 		this._root = new Entity();
+		this.smile();
+	}
+
+	public function smile() {
+		this._root.disposeChildren();
 		this._root //
-			.addChild(new Entity().add(new ImageSprite(pack.getTexture("cafe/sun/mouthSmile")).setXY(10, 55)));
+			.addChild(new Entity().add(new ImageSprite(_pack.getTexture("cafe/sun/mouthSmile")).setXY(10, 55)));
+	}
+
+	public function mad() {
+		this._root.disposeChildren();
+		this._root //
+			.addChild(new Entity().add(new ImageSprite(_pack.getTexture("cafe/sun/mouthOpen")).setXY(40, 55)));
 	}
 
 	private var _root:Entity;
-	private var _smile1:Sprite;
-	private var _smile2:Sprite;
-	private var _smile3:Sprite;
+	private var _pack:AssetPack;
 }
 
 class BackgroundSunEye extends Component {

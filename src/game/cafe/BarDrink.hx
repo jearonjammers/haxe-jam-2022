@@ -25,10 +25,13 @@ class BarDrink extends Component {
 	public var state(default, null):Value<BarDrinkState>;
 	public var rotation(get, null):Float;
 
-	public function new(pack:AssetPack, x:Float, y:Float, bar:Bar) {
+	private var _game:CafeGame;
+
+	public function new(pack:AssetPack, x:Float, y:Float, bar:Bar, game:CafeGame) {
 		this._x = x;
 		this._y = y;
 		this._bar = bar;
+		this._game = game;
 		this.state = new Value(Off);
 		this.init(pack);
 	}
@@ -42,22 +45,24 @@ class BarDrink extends Component {
 	}
 
 	override function onUpdate(dt:Float) {
-		switch this.state._ {
-			case Destroyed(ref):
-				ref.time += dt;
-				if (ref.time >= DESTROYED_DURATION) {
-					this.show(false);
-				}
-			case Idle:
-			case Active(ref):
-				ref.time += dt;
-				if (ref.time >= ACTIVE_DURATION) {
-					this._bar.drink = null;
-					this._bar.liquid.visible = false;
-					this.toss();
-				}
-			case Off:
-			case Sliding:
+		if (this._game.isGameplay) {
+			switch this.state._ {
+				case Destroyed(ref):
+					ref.time += dt;
+					if (ref.time >= DESTROYED_DURATION) {
+						this.show(false);
+					}
+				case Idle:
+				case Active(ref):
+					ref.time += dt;
+					if (ref.time >= ACTIVE_DURATION) {
+						this._bar.drink = null;
+						this._bar.liquid.visible = false;
+						this.toss();
+					}
+				case Off:
+				case Sliding:
+			}
 		}
 	}
 
@@ -102,7 +107,7 @@ class BarDrink extends Component {
 	public function grab(x:Float, y:Float) {
 		this.state._ = Active({time: 0});
 		var spr = this._root.get(Sprite);
-		var angleDist = 25;
+		var angleDist = 15;
 		spr.rotation.behavior = new Sine(180 + angleDist, 180 - angleDist, 1);
 		this.moveTo(x, y);
 	}

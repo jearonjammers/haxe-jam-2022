@@ -1,5 +1,8 @@
 package game.text;
 
+import flambe.System;
+import game.runner.RunnerGame;
+import flambe.script.CallFunction;
 import flambe.animation.Ease;
 import flambe.script.AnimateTo;
 import flambe.script.Parallel;
@@ -51,7 +54,7 @@ class TextGame extends Component {
 		_text3.alpha._ = 0;
 		_text4.alpha._ = 0;
 		this._root.add(new Script()).get(Script).run(new Sequence([
-			new Delay(2),
+			new Delay(3),
 			new Sequence([
 				new AnimateTo(_phone.rotation, -5, 0.125),
 				new AnimateTo(_phone.rotation, 5, 0.125),
@@ -92,6 +95,10 @@ class TextGame extends Component {
 				new AnimateTo(_texts.y, Y_4, 0.5, Ease.backOut)
 			]),
 			new Delay(2.5),
+			new CallFunction(() -> {
+				this.dispose();
+				System.root.add(new RunnerGame(pack, 1920, 1080));
+			})
 		]));
 	}
 
