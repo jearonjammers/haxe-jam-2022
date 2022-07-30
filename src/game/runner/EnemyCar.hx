@@ -20,6 +20,14 @@ class EnemyCar extends Component {
 		owner.removeChild(this._root);
 	}
 
+	override function onUpdate(dt:Float) {
+		this._root.get(Sprite).x._ -= 500 * dt;
+		_elapsed += dt;
+		if (_elapsed > 3) {
+			this.owner.dispose();
+		}
+	}
+
 	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
 		var car = new ImageSprite(pack.getTexture("runner/car/car"));
 		var carEye = new ImageSprite(pack.getTexture("runner/car/carEye"));
@@ -54,4 +62,5 @@ class EnemyCar extends Component {
 	}
 
 	private var _root:Entity;
+	private var _elapsed = 0.0;
 }

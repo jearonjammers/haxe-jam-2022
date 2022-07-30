@@ -21,6 +21,14 @@ class EnemyBird extends Component {
 		owner.removeChild(this._root);
 	}
 
+	override function onUpdate(dt:Float) {
+		this._root.get(Sprite).x._ -= 400 * dt;
+		_elapsed += dt;
+		if (_elapsed > 4) {
+			this.owner.dispose();
+		}
+	}
+
 	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
 		var anchorSprite = new Sprite();
 		var birdFeet = new ImageSprite(pack.getTexture("runner/bird/birdFeet"));
@@ -52,4 +60,5 @@ class EnemyBird extends Component {
 	}
 
 	private var _root:Entity;
+	private var _elapsed = 0.0;
 }

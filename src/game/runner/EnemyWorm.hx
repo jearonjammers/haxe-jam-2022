@@ -1,5 +1,6 @@
 package game.runner;
 
+import flambe.System;
 import flambe.animation.Sine;
 import flambe.math.Rectangle;
 import flambe.display.Sprite;
@@ -9,7 +10,7 @@ import flambe.Entity;
 import flambe.Component;
 
 class EnemyWorm extends Component {
-	public function new(pack:AssetPack, index :Int, x:Float, y:Float) {
+	public function new(pack:AssetPack, index:Int, x:Float, y:Float) {
 		this.init(pack, index, x, y);
 	}
 
@@ -21,7 +22,14 @@ class EnemyWorm extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack, index :Int, x:Float, y:Float) {
+	override function onUpdate(dt:Float) {
+		_elapsed += dt;
+		if (_elapsed > 7) {
+			this.owner.dispose();
+		}
+	}
+
+	private function init(pack:AssetPack, index:Int, x:Float, y:Float) {
 		var anchorX = 77;
 		var anchorY = 230;
 		var tex = pack.getTexture("runner/worm/worm");
@@ -40,7 +48,7 @@ class EnemyWorm extends Component {
 		_worm.y.behavior = new Sine(0, 300, 2);
 		_worm.rotation.behavior = new Sine(-15, 15, 1);
 
-		if(index == 0) {
+		if (index == 0) {
 			this._root.addChild(new Entity().add(new ImageSprite(pack.getTexture("runner/instructJump")).setXY(-220, -470)));
 		}
 	}
@@ -48,6 +56,7 @@ class EnemyWorm extends Component {
 	private var _root:Entity;
 	private var _clip:Sprite;
 	private var _worm:Sprite;
+	private var _elapsed = 0.0;
 
 	private static inline var PADDING = 60;
 	private static inline var CLIP_LENGTH = 30;

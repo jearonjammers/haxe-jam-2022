@@ -73,6 +73,7 @@ class RunnerGame extends Component {
 				})
 			]));
 		}
+		handleEnemy(dt, dp.percent);
 	}
 
 	override function onAdded() {
@@ -82,6 +83,18 @@ class RunnerGame extends Component {
 	override function onRemoved() {
 		owner.removeChild(this._root);
 		_disposer.dispose();
+	}
+
+	private inline function handleEnemy(dt:Float, percent:Float) {
+		if (!_hasWon && !_hasLost && percent < 0.8) {
+			_enemyElapsed += dt;
+			if (_enemyElapsed >= _enemyDuration) {
+				_enemyElapsed = 0;
+				_enemyDuration = ENEMY_DUR_MIN + Math.random() * (ENEMY_DUR_MAX - ENEMY_DUR_MIN);
+				var xpos = -_sceneryMid.get(Sprite).x._ + 2400;
+				addEnemy(xpos);
+			}
+		}
 	}
 
 	private function handleSuccess() {
@@ -236,7 +249,7 @@ class RunnerGame extends Component {
 	private var _crouchIndex = 0;
 
 	private function addBird(xPos:Float) {
-		_sceneryMid.addChild(new Entity().add(new EnemyBird(_pack, _crouchIndex++, xPos, 685)));
+		_sceneryMid.addChild(new Entity().add(new EnemyBird(_pack, _crouchIndex++, xPos, 525)));
 	}
 
 	private var _jumpIndex = 0;
@@ -261,9 +274,15 @@ class RunnerGame extends Component {
 		}
 	}
 
+	private static inline var ENEMY_DUR_START = 0.5;
+	private static inline var ENEMY_DUR_MIN = 2;
+	private static inline var ENEMY_DUR_MAX = 6;
+
 	private var _root:Entity;
 	private var _bg:RGBSprite;
 	private var _floor:RGBSprite;
+	private var _enemyElapsed:Float = 0;
+	private var _enemyDuration:Float = ENEMY_DUR_START;
 	private var _distWorld:Float = 0;
 	private var _distPerson:Float = 0;
 	private var _hasLost:Bool = false;
