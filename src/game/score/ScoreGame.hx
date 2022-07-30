@@ -25,6 +25,8 @@ class ScoreGame extends Component {
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
+		Audio.stop_();
+		Audio.playSound_("sfx/win");
 		var x = width / 2;
 		var scoreTop:Sprite;
 		var scoreBottom:Sprite;
@@ -60,6 +62,7 @@ class ScoreGame extends Component {
 
 		_homeButton.click.connect(() -> {
 			this.dispose();
+			Audio.playSound_("click");
 			System.root.get(DrinkPercent).reset();
 			System.root.add(new CafeGame(pack, width, height));
 		}).once();

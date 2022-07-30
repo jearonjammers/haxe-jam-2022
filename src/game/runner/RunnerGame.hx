@@ -106,6 +106,7 @@ class RunnerGame extends Component {
 	}
 
 	private function init(width:Float, height:Float) {
+		Audio.playMain_();
 		var METER_Y = 180;
 		_bg = new RGBSprite(235, 59, 36, 172, 221, 229, width, height);
 		_floor = new RGBSprite(9, 87, 233, 204, 204, 204, width, height);
@@ -150,12 +151,14 @@ class RunnerGame extends Component {
 
 		_disposer.add(_homeButton.click.connect(() -> {
 			this.dispose();
+			Audio.playSound_("click");
 			System.root.get(DrinkPercent).reset();
 			System.root.add(new CafeGame(_pack, width, height));
 		}));
 
 		_disposer.add(_person.hasFallen.connect(() -> {
 			_hasLost = true;
+			Audio.playSound_("sfx/cafe/partyHarder");
 			var lostSpr = new ImageSprite(_pack.getTexture("runner/lost")).centerAnchor().setXY(1920 / 2, 1080);
 			lostSpr.y.animateTo(1080 / 2, 0.5, Ease.backOut);
 			lostSpr.rotation.behavior = new Sine(-5, 5, 4);

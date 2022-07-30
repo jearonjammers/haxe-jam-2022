@@ -18,20 +18,24 @@ class Audio extends Component {
 		}
 	}
 
-    public static function playTitle_() : Void {
-        System.root.get(Audio).playTitle();
-    }
+	public static function playTitle_():Void {
+		System.root.get(Audio).playTitle();
+	}
 
-    public static function playMain_() : Void {
-        System.root.get(Audio).playMain();
-    }
+	public static function playMain_():Void {
+		System.root.get(Audio).playMain();
+	}
+
+	public static function stop_():Void {
+		System.root.get(Audio).stop();
+	}
 
 	public static function playSound_(name:String):Void {
-        System.root.get(Audio).playSound(name);
+		System.root.get(Audio).playSound(name);
 	}
 
 	public function new(pack:AssetPack) {
-        _pack = pack;
+		_pack = pack;
 		this.init();
 	}
 
@@ -45,21 +49,22 @@ class Audio extends Component {
 		this._root.add(_mixer = new Mixer());
 	}
 
-    public function playTitle() : Void {
-        if(_bg != null) {
-            _bg.dispose();
-            _bg = null;
-        }
-        _bg = _pack.getSound("sfx/title").loop();
-    }
+	public function playTitle():Void {
+		this.stop();
+		_bg = _pack.getSound("sfx/title").loop();
+	}
 
-    public function playMain() : Void {
-        if(_bg != null) {
-            _bg.dispose();
-            _bg = null;
-        }
-        _bg = _pack.getSound("sfx/main").loop();
-    }
+	public function playMain():Void {
+		this.stop();
+		_bg = _pack.getSound("sfx/main").loop();
+	}
+
+	public function stop():Void {
+		if (_bg != null) {
+			_bg.dispose();
+			_bg = null;
+		}
+	}
 
 	public function playSound(name:String):Void {
 		if (!_madeSounds.exists(name)) {

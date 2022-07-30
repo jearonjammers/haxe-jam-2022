@@ -115,6 +115,7 @@ class CafeGame extends Component {
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
+		Audio.playTitle_();
 		_anchorX._ = 1900;
 		var METER_Y = 180;
 		this._disposer = new Disposer();
