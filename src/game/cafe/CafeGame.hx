@@ -36,19 +36,26 @@ class CafeGame extends Component {
 		_anchorX.update(dt);
 		_anchorY.update(dt);
 		_rotation.update(dt);
-		if (_isGameplay) {
-			_elapsed += dt;
-			if (_elapsed > 5) {
-				_elapsed = 0;
-				if (Math.random() > 0.5) {
-					_thirstyArms.wave();
-				} else {
-					_thirstyArms.slam();
+		if (!_timeComplete) {
+			if (_isGameplay) {
+				_elapsed += dt;
+				if (_elapsed > 5) {
+					_elapsed = 0;
+					if (Math.random() > 0.5) {
+						_thirstyArms.wave();
+					} else {
+						_thirstyArms.slam();
+					}
 				}
 			}
-		}
 
-		if (!_timeComplete) {
+			if(_reachX != ThirstyArms.INVALID_REACH && _thirstyPerson.state != Drinking) {
+				_thirstyPerson.drink();
+			}
+			else if(_reachX == ThirstyArms.INVALID_REACH && _thirstyPerson.state != Thirsty) {
+				_thirstyPerson.thirst();
+			}
+
 			_timeElapsed += dt;
 			this._meterDrink.get(Meter).setFill(0);
 			var scale = 1 - _timeElapsed / TIME_DURATION;
@@ -89,6 +96,14 @@ class CafeGame extends Component {
 
 		this._disposer.add(_playButton.click.connect(this.nextState).once());
 
+		this._disposer.add(this._thirstyArms.reachX.changed.connect((to, _) -> {
+			this._reachX = to;
+		}));
+
+		this._disposer.add(this._thirstyArms.reachY.changed.connect((to, _) -> {
+			this._reachY = to;
+		}));
+
 		this._meterDrink.get(Meter).setFill(0);
 		this._meterTime.get(Meter).setFill(1);
 	}
@@ -127,6 +142,8 @@ class CafeGame extends Component {
 	private var _drinkAmount = 0.0;
 	private var _timeElapsed = 0.0;
 	private var _timeComplete = false;
+	private var _reachX:Float = 0.0;
+	private var _reachY:Float = 0.0;
 
 	private static inline var TIME_DURATION = 30;
 }

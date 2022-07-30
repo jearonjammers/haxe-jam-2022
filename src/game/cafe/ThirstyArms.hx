@@ -15,10 +15,15 @@ import flambe.Component;
 using game.SpriteUtil;
 
 class ThirstyArms extends Component {
-	public var isAvailable :Bool = true;
-	public var canReach(get, null) : Bool;
+	public static var INVALID_REACH = 99999;
+	public var isAvailable:Bool = true;
+	public var canReach(get, null):Bool;
+	public var reachX:Value<Float>;
+	public var reachY:Value<Float>;
 
 	public function new(pack:AssetPack, width:Float, height:Float) {
+		this.reachX = new Value(0.0);
+		this.reachY = new Value(0.0);
 		this.init(pack, width, height);
 	}
 
@@ -28,6 +33,7 @@ class ThirstyArms extends Component {
 
 	override function onRemoved() {
 		owner.removeChild(this._root);
+		_disposer.dispose();
 	}
 
 	public function bindTo(anchorX:AnimatedFloat, anchorY:AnimatedFloat, rotation:AnimatedFloat) {
@@ -46,7 +52,7 @@ class ThirstyArms extends Component {
 		return this;
 	}
 
-	private function get_canReach() : Bool {
+	private function get_canReach():Bool {
 		return this._left.get(ThirstyArm).canReach;
 	}
 
@@ -60,19 +66,34 @@ class ThirstyArms extends Component {
 
 		this._root //
 			.addChild(this._right).addChild(this._left); //
+
+		_disposer = new Disposer();
+		_disposer.add(this._left.get(ThirstyArm).reachX.changed.connect((to, _) -> {
+			this.reachX._ = to;
+		}));
+		_disposer.add(this._left.get(ThirstyArm).reachY.changed.connect((to, _) -> {
+			this.reachY._ = to;
+		}));
+
+		// this.reachX.chab
 	}
 
 	private var _root:Entity;
 	private var _left:Entity;
 	private var _right:Entity;
+	private var _disposer:Disposer;
 }
 
 class ThirstyArm extends Component {
 	public var isStale:Bool = false;
-	public var canReach(get, null) : Bool;
+	public var canReach(get, null):Bool;
+	public var reachX:Value<Float>;
+	public var reachY:Value<Float>;
 
 	public function new(pack:AssetPack, x:Float, y:Float, isFlipped:Bool) {
 		this._isFlipped = isFlipped;
+		this.reachX = new Value(0.0);
+		this.reachY = new Value(0.0);
 		this.init(pack, x, y);
 	}
 
@@ -94,7 +115,7 @@ class ThirstyArm extends Component {
 		}
 	}
 
-	private function get_canReach() : Bool {
+	private function get_canReach():Bool {
 		return this._angles.canReach;
 	}
 
@@ -147,6 +168,8 @@ class ThirstyArm extends Component {
 		var lowerSprite = this._lower.get(Sprite);
 
 		var local = rootSpr.localXY(this._viewX, this._viewY);
+		this.reachX._ = local.x;
+		this.reachY._ = local.y;
 		ArmUtil.calcAngles(local.x, local.y, this._angles, this._isFlipped);
 		upperSpite.setRotation(_angles.top);
 		lowerSprite.setRotation(_angles.bottom);
@@ -155,6 +178,8 @@ class ThirstyArm extends Component {
 	private function idleing() {
 		var upperSpite = this._upper.get(Sprite);
 		var lowerSprite = this._lower.get(Sprite);
+		this.reachX._ = ThirstyArms.INVALID_REACH;
+		this.reachY._ = ThirstyArms.INVALID_REACH;
 		ArmUtil.calcAngles(0, this._idleAnim._, this._angles, this._isFlipped);
 		upperSpite.setRotation(_angles.top);
 		lowerSprite.setRotation(_angles.bottom);

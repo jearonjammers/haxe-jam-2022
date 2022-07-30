@@ -4,12 +4,19 @@ import flambe.display.ImageSprite;
 import flambe.asset.AssetPack;
 import flambe.animation.Sine;
 import flambe.animation.AnimatedFloat;
-import flambe.display.FillSprite;
 import flambe.display.Sprite;
 import flambe.Entity;
 import flambe.Component;
 
+enum ThirstyPersonState {
+	Drinking;
+	Mad;
+	Thirsty;
+}
+
 class ThirstyPerson extends Component {
+	public var state(get, null):ThirstyPersonState = Thirsty;
+
 	public function new(pack:AssetPack, width:Float, height:Float) {
 		this.init(pack, width, height);
 	}
@@ -26,6 +33,18 @@ class ThirstyPerson extends Component {
 		this._root.get(Sprite).anchorX.bindTo(anchorX);
 		this._root.get(Sprite).anchorY.bindTo(anchorY);
 		this._root.get(Sprite).rotation.bindTo(rotation);
+	}
+
+	public function drink() {
+		this._head.get(ThirstyPersonHead).drink();
+	}
+
+	public function thirst() {
+		this._head.get(ThirstyPersonHead).thirst();
+	}
+
+	private function get_state():ThirstyPersonState {
+		return this._head.get(ThirstyPersonHead).state;
 	}
 
 	private function init(pack:AssetPack, width:Float, height:Float) {
@@ -45,8 +64,11 @@ class ThirstyPerson extends Component {
 }
 
 class ThirstyPersonHead extends Component {
+	public var state:ThirstyPersonState = Thirsty;
+
 	public function new(pack:AssetPack) {
-		this.init(pack);
+		_pack = pack;
+		this.init();
 	}
 
 	override function onAdded() {
@@ -57,17 +79,47 @@ class ThirstyPersonHead extends Component {
 		owner.removeChild(this._root);
 	}
 
-	private function init(pack:AssetPack) {
+	private function init() {
 		this._root = new Entity().add(new Sprite());
-		this._head = new Entity().add(new ImageSprite(pack.getTexture("cafe/body/head")).setXY(0, -275).centerAnchor());
+		this._head = new Entity().add(new ImageSprite(_pack.getTexture("cafe/body/head")).setXY(0, -275).centerAnchor());
 		this._root.addChild(this._head);
 		this._root.get(Sprite).anchorX.behavior = new Sine(-2, 2, 2);
 		this._root.get(Sprite).anchorY.behavior = new Sine(0, 10, 3);
 		this._root.get(Sprite).rotation.behavior = new Sine(-5, 5, 5);
+		this._root.addChild(_features = new Entity());
+
+		drink();
+	}
+
+	public function drink() {
+		this.state = Drinking;
+		_features.disposeChildren();
+		var eyes = new ImageSprite(_pack.getTexture("cafe/body/eyesDrinking"));
+		_features //
+			.addChild(new Entity().add(new ImageSprite(_pack.getTexture("cafe/body/mouthCool")) //
+				.setXY(10, -155).centerAnchor())) //
+			.addChild(new Entity().add(eyes //
+				.setXY(0, -290) //
+				.centerAnchor())); //
+	}
+
+	public function thirst() {
+		this.state = Thirsty;
+		_features.disposeChildren();
+		var eyes = new ImageSprite(_pack.getTexture("cafe/body/eyesCool"));
+		_features //
+			.addChild(new Entity().add(new ImageSprite(_pack.getTexture("cafe/body/mouthCool")) //
+				.setXY(10, -155).centerAnchor())) //
+			.addChild(new Entity().add(eyes //
+				.setXY(0, -290) //
+				.centerAnchor())); //
+		eyes.scaleY.behavior = new Sine(1, 0.9, 0.5);
 	}
 
 	private var _root:Entity;
 	private var _head:Entity;
+	private var _features:Entity;
+	private var _pack:AssetPack;
 }
 
 class ThirstyPersonTorso extends Component {
